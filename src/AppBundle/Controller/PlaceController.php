@@ -84,13 +84,18 @@ class PlaceController extends Controller
 
     /**
      * @Rest\View()
-     * @Rest\Put("/places/{id}")
+     * @Rest\Patch("/places/{id}")
      */
-    public function updatePlaceAction(Request $request)
+    public function patchPlaceAction(Request $request)
+    {
+        return $this->updatePlace($request, false);
+    }
+
+    private function updatePlace(Request $request, $clearMissing)
     {
         $place = $this->get('doctrine.orm.entity_manager')
-        ->getRepository('AppBundle:Place')
-        ->find($request->get('id')); // L'identifiant en tant que paramètre n'est plus nécessaire
+                ->getRepository('AppBundle:Place')
+                ->find($request->get('id')); // L'identifiant en tant que paramètre n'est plus nécessaire
         /* @var $place Place */
 
         if (empty($place)) {
@@ -99,13 +104,13 @@ class PlaceController extends Controller
 
         $form = $this->createForm(PlaceType::class, $place);
 
-        $form->submit($request->request->all());
+        // Le paramètre false dit à Symfony de garder les valeurs dans notre
+        // entité si l'utilisateur n'en fournit pas une dans sa requête
+        $form->submit($request->request->all(), $clearMissing);
 
         if ($form->isValid()) {
             $em = $this->get('doctrine.orm.entity_manager');
-            // l'entité vient de la base, donc le merge n'est pas nécessaire.
-            // il est utilisé juste par soucis de clarté
-            $em->merge($place);
+            $em->persist($place);
             $em->flush();
             return $place;
         } else {
