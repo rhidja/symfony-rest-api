@@ -7,6 +7,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use AppBundle\Entity\User;
 
 class UserController extends Controller
@@ -46,6 +47,10 @@ class UserController extends Controller
                 ->getRepository('AppBundle:User')
                 ->find($request->get('id'));
         /* @var $user User */
+
+        if (empty($user)) {
+            return new JsonResponse(['message' => 'User not found'], Response::HTTP_NOT_FOUND);
+        }
 
         $formatted = [
            'id' => $user->getId(),
