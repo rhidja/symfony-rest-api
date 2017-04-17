@@ -38,7 +38,7 @@ class UserController extends Controller
 
 
     /**
-     * @Route("/users/{id}", requirements={"id" = "\d+"}, name="users_one")
+     * @Route("/users/{user_id}", requirements={"user_id" = "\d+"}, name="users_one")
      * @Method({"GET"})
      */
     public function getUserAction(Request $request)
