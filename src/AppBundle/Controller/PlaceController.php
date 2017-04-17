@@ -7,11 +7,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use FOS\RestBundle\Controller\Annotations as Rest; // alias pour toutes les annotations
+use AppBundle\Form\Type\PlaceType;
 use AppBundle\Entity\Place;
 
 class PlaceController extends Controller
 {
-
     /**
      * @Rest\View()
      * @Rest\Get("/places")
@@ -51,13 +51,17 @@ class PlaceController extends Controller
     public function postPlacesAction(Request $request)
     {
         $place = new Place();
-        $place->setName($request->get('name'))
-            ->setAddress($request->get('address'));
+        $form = $this->createForm(PlaceType::class, $place);
 
-        $em = $this->get('doctrine.orm.entity_manager');
-        $em->persist($place);
-        $em->flush();
+        $form->submit($request->request->all()); // Validation des données
 
-        return $place;
+        if ($form->isValid()) {
+            $em = $this->get('doctrine.orm.entity_manager');
+            $em->persist($place);
+            $em->flush();
+            return $place;
+        } else {
+            return $form;
+        }
     }
 }
