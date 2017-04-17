@@ -40,7 +40,7 @@ class UserController extends Controller
         /* @var $user User */
 
         if (empty($user)) {
-            return new JsonResponse(['message' => 'User not found'], Response::HTTP_NOT_FOUND);
+            return \FOS\RestBundle\View\View::create(['message' => 'User not found'], Response::HTTP_NOT_FOUND);
         }
 
         return $user;
@@ -101,7 +101,7 @@ class UserController extends Controller
         /* @var $user User */
 
         if (empty($user)) {
-            return new JsonResponse(['message' => 'User not found'], Response::HTTP_NOT_FOUND);
+            return \FOS\RestBundle\View\View::create(['message' => 'User not found'], Response::HTTP_NOT_FOUND);
         }
 
         $form = $this->createForm(UserType::class, $user);
