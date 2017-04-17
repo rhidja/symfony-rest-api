@@ -8,13 +8,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use FOS\RestBundle\Controller\Annotations\Get;
 use AppBundle\Entity\User;
 
 class UserController extends Controller
 {
     /**
-     * @Route("/users", name="users_list")
-     * @Method({"GET"})
+     * @Get("/users")
      */
     public function getUsersAction(Request $request)
     {
@@ -38,8 +38,7 @@ class UserController extends Controller
 
 
     /**
-     * @Route("/users/{user_id}", requirements={"user_id" = "\d+"}, name="users_one")
-     * @Method({"GET"})
+     * @Get("/users/{id}")
      */
     public function getUserAction(Request $request)
     {
