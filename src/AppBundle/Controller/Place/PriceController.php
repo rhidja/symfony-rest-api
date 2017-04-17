@@ -14,7 +14,7 @@ class PriceController extends Controller
 {
 
     /**
-     * @Rest\View()
+     * @Rest\View(serializerGroups={"price"})
      * @Rest\Get("/places/{id}/prices")
      */
     public function getPricesAction(Request $request)
@@ -32,8 +32,8 @@ class PriceController extends Controller
     }
 
 
-     /**
-     * @Rest\View(statusCode=Response::HTTP_CREATED)
+    /**
+     * @Rest\View(statusCode=Response::HTTP_CREATED, serializerGroups={"price"})
      * @Rest\Post("/places/{id}/prices")
      */
     public function postPricesAction(Request $request)
