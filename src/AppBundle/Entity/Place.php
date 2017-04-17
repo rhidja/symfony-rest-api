@@ -34,11 +34,18 @@ class Place
      */
     protected $prices;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Theme", mappedBy="place")
+     * @var Theme[]
+     */
+    protected $themes;
+
     public function __construct()
     {
         $this->prices = new ArrayCollection();
+        $this->themes = new ArrayCollection();
     }
-    
+
     public function getId()
     {
         return $this->id;
@@ -104,5 +111,39 @@ class Place
     public function getPrices()
     {
         return $this->prices;
+    }
+
+    /**
+     * Add theme
+     *
+     * @param \AppBundle\Entity\Theme $theme
+     *
+     * @return Place
+     */
+    public function addTheme(\AppBundle\Entity\Theme $theme)
+    {
+        $this->themes[] = $theme;
+
+        return $this;
+    }
+
+    /**
+     * Remove theme
+     *
+     * @param \AppBundle\Entity\Theme $theme
+     */
+    public function removeTheme(\AppBundle\Entity\Theme $theme)
+    {
+        $this->themes->removeElement($theme);
+    }
+
+    /**
+     * Get themes
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getThemes()
+    {
+        return $this->themes;
     }
 }
