@@ -7,9 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity()
- * @ORM\Table(name="preferences",
- *      uniqueConstraints={@ORM\UniqueConstraint(name="preferences_name_user_unique", columns={"name", "user_id"})}
- * )
+ * @ORM\Table(name="preferences", uniqueConstraints={@ORM\UniqueConstraint(name="preferences_name_user_unique", columns={"name", "user_id"})} )
  */
 class Preference
 {
@@ -36,17 +34,6 @@ class Preference
      */
     protected $user;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Preference", mappedBy="user")
-     * @var Preference[]
-     */
-    protected $preferences;
-
-    public function __construct()
-    {
-        $this->preferences = new ArrayCollection();
-    }
-
 
     public function match(Theme $theme)
     {
@@ -58,38 +45,75 @@ class Preference
         return $this->id;
     }
 
-    public function setId($id)
+    /**
+     * Set name
+     *
+     * @param string $name
+     *
+     * @return Preference
+     */
+    public function setName($name)
     {
-        $this->id = $id;
+        $this->name = $name;
+
+        return $this;
     }
 
+    /**
+     * Get name
+     *
+     * @return string
+     */
     public function getName()
     {
         return $this->name;
     }
 
-    public function setName($name)
+    /**
+     * Set value
+     *
+     * @param integer $value
+     *
+     * @return Preference
+     */
+    public function setValue($value)
     {
-        $this->name = $name;
+        $this->value = $value;
+
+        return $this;
     }
 
+    /**
+     * Get value
+     *
+     * @return integer
+     */
     public function getValue()
     {
         return $this->value;
     }
 
-    public function setValue($value)
+    /**
+     * Set user
+     *
+     * @param \AppBundle\Entity\User $user
+     *
+     * @return Preference
+     */
+    public function setUser(\AppBundle\Entity\User $user = null)
     {
-        $this->value = $value;
+        $this->user = $user;
+
+        return $this;
     }
 
+    /**
+     * Get user
+     *
+     * @return \AppBundle\Entity\User
+     */
     public function getUser()
     {
         return $this->user;
-    }
-
-    public function setUser(User $user)
-    {
-        $this->user = $user;
     }
 }

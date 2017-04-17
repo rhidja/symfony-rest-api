@@ -31,7 +31,6 @@ class PreferenceController extends Controller
         return $user->getPreferences();
     }
 
-
      /**
      * @Rest\View(statusCode=Response::HTTP_CREATED, serializerGroups={"preference"})
      * @Rest\Post("/users/{id}/preferences")
