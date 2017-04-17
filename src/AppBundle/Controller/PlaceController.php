@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use FOS\RestBundle\Controller\Annotations\Get; // N'oublons pas d'inclure Get
+use FOS\RestBundle\View\View; // Utilisation de la vue de FOSRestBundle
 use AppBundle\Entity\Place;
 
 class PlaceController extends Controller
@@ -24,16 +25,11 @@ class PlaceController extends Controller
                 ->findAll();
         /* @var $places Place[] */
 
-        $formatted = [];
-        foreach ($places as $place) {
-            $formatted[] = [
-               'id' => $place->getId(),
-               'name' => $place->getName(),
-               'address' => $place->getAddress(),
-            ];
-        }
+        // Création d'une vue FOSRestBundle
+        $view = View::create($places);
+        $view->setFormat('json');
 
-        return new JsonResponse($formatted);
+        return $view;
     }
 
     /**

@@ -74,3 +74,5 @@ swiftmailer:
 fos_rest:
     routing_loader:
         include_format: false
+    view:
+        view_response_listener: true
