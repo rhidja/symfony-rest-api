@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Controller\Annotations as Rest; // alias pour toutes les annotations
+use AppBundle\Form\Type\UserType;
 use AppBundle\Entity\User;
 
 class UserController extends Controller
@@ -63,6 +64,23 @@ class UserController extends Controller
             return $user;
         } else {
             return $form;
+        }
+    }
+
+    /**
+     * @Rest\View(statusCode=Response::HTTP_NO_CONTENT)
+     * @Rest\Delete("/users/{id}")
+     */
+    public function removeUserAction(Request $request)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $user = $em->getRepository('AppBundle:User')
+        ->find($request->get('id'));
+        /* @var $user User */
+
+        if ($user) {
+            $em->remove($user);
+            $em->flush();
         }
     }
 }
