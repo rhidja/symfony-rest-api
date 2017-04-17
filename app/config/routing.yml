@@ -5,6 +5,10 @@ app:
 places:
     type:     rest
     resource: AppBundle\Controller\PlaceController
+    
+prices:
+    type:     rest
+    resource: AppBundle\Controller\Place\PriceController
 
 users:
     type:     rest
