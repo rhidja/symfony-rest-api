@@ -17,3 +17,7 @@ themes:
 users:
     type:     rest
     resource: AppBundle\Controller\UserController
+
+preferences:
+    type:     rest
+    resource: AppBundle\Controller\User\PreferenceController

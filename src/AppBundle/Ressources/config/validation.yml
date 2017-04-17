@@ -49,3 +49,17 @@ AppBundle\Entity\Theme:
                 value: 0
             - LessThanOrEqual:
                 value: 10
+
+AppBundle\Entity\Preference:
+    properties:
+        name:
+            - NotNull: ~
+            - Choice:
+                choices: [art, architecture, history, science-fiction, sport]
+        value:
+            - NotNull: ~
+            - Type: numeric
+            - GreaterThan:
+                value: 0
+            - LessThanOrEqual:
+                value: 10

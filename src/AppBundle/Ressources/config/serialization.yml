@@ -33,3 +33,27 @@ AppBundle\Entity\Theme:
             groups: ['place', 'theme']
         place:
             groups: ['theme']
+
+AppBundle\Entity\User:
+    attributes:
+        id:
+            groups: ['user', 'preference']
+        firstname:
+            groups: ['user', 'preference']
+        lastname:
+            groups: ['user', 'preference']
+        email:
+            groups: ['user', 'preference']
+        preferences:
+            groups: ['user']
+
+AppBundle\Entity\Preference:
+    attributes:
+        id:
+            groups: ['user', 'preference']
+        name:
+            groups: ['user', 'preference']
+        value:
+            groups: ['user', 'preference']
+        user:
+            groups: ['preference']
