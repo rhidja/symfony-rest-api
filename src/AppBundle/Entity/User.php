@@ -44,28 +44,34 @@ class User implements UserInterface
     protected $plainPassword;
 
     /**
-    * @ORM\OneToMany(targetEntity="Preference", mappedBy="user")
-    * @var Preference[]
-    */
-    protected $preferences;
-
-    public function __construct()
+     * Get password
+     *
+     * @return string
+     */
+    public function getPassword()
     {
-        $this->preferences = new ArrayCollection();
+        return $this->password;
     }
 
-    public function preferencesMatch($themes)
+    public function getRoles()
     {
-        $matchValue = 0;
-        foreach ($this->preferences as $preference) {
-            foreach ($themes as $theme) {
-                if ($preference->match($theme)) {
-                    $matchValue += $preference->getValue() * $theme->getValue();
-                }
-            }
-        }
+        return [];
+    }
 
-        return $matchValue >= self::MATCH_VALUE_THRESHOLD;
+    public function getSalt()
+    {
+        return null;
+    }
+
+    public function getUsername()
+    {
+        return $this->email;
+    }
+
+    public function eraseCredentials()
+    {
+        // Suppression des données sensibles
+        $this->plainPassword = null;
     }
 
     /**
@@ -151,40 +157,6 @@ class User implements UserInterface
     }
 
     /**
-     * Add preference
-     *
-     * @param \AppBundle\Entity\Preference $preference
-     *
-     * @return User
-     */
-    public function addPreference(\AppBundle\Entity\Preference $preference)
-    {
-        $this->preferences[] = $preference;
-
-        return $this;
-    }
-
-    /**
-     * Remove preference
-     *
-     * @param \AppBundle\Entity\Preference $preference
-     */
-    public function removePreference(\AppBundle\Entity\Preference $preference)
-    {
-        $this->preferences->removeElement($preference);
-    }
-
-    /**
-     * Get preferences
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getPreferences()
-    {
-        return $this->preferences;
-    }
-
-    /**
      * Set password
      *
      * @param string $password
@@ -196,36 +168,5 @@ class User implements UserInterface
         $this->password = $password;
 
         return $this;
-    }
-
-    /**
-     * Get password
-     *
-     * @return string
-     */
-    public function getPassword()
-    {
-        return $this->password;
-    }
-
-    public function getRoles()
-    {
-        return [];
-    }
-
-    public function getSalt()
-    {
-        return null;
-    }
-
-    public function getUsername()
-    {
-        return $this->email;
-    }
-
-    public function eraseCredentials()
-    {
-        // Suppression des données sensibles
-        $this->plainPassword = null;
     }
 }

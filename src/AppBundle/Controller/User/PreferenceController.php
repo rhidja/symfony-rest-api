@@ -28,7 +28,11 @@ class PreferenceController extends Controller
             return $this->userNotFound();
         }
 
-        return $user->getPreferences();
+        $preferences = $this->get('doctrine.orm.entity_manager')
+                ->getRepository('AppBundle:Preference')
+                ->findByUser($user);
+
+        return $preferences;
     }
 
      /**

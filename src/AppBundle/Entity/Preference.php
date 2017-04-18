@@ -29,7 +29,7 @@ class Preference
     protected $value;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="preferences")
+     * @ORM\ManyToOne(targetEntity="User")
      * @var User
      */
     protected $user;

@@ -15,7 +15,7 @@ use AppBundle\Entity\User;
 class UserController extends Controller
 {
     /**
-     * @Rest\View(serializerGroups={"user"})
+     * @Rest\View()
      * @Rest\Get("/users")
      */
     public function getUsersAction(Request $request)
@@ -29,7 +29,7 @@ class UserController extends Controller
     }
 
     /**
-     * @Rest\View(serializerGroups={"user"})
+     * @Rest\View()
      * @Rest\Get("/users/{user_id}")
      */
     public function getUserAction(Request $request)
@@ -47,7 +47,7 @@ class UserController extends Controller
     }
 
     /**
-     * @Rest\View(statusCode=Response::HTTP_CREATED, serializerGroups={"user"})
+     * @Rest\View(statusCode=Response::HTTP_CREATED)
      * @Rest\Post("/users")
      */
     public function postUsersAction(Request $request)
@@ -73,7 +73,7 @@ class UserController extends Controller
     }
 
     /**
-     * @Rest\View(statusCode=Response::HTTP_NO_CONTENT, serializerGroups={"user"})
+     * @Rest\View(statusCode=Response::HTTP_NO_CONTENT)
      * @Rest\Delete("/users/{id}")
      */
     public function removeUserAction(Request $request)
@@ -90,7 +90,7 @@ class UserController extends Controller
     }
 
     /**
-     * @Rest\View(serializerGroups={"user"})
+     * @Rest\View()
      * @Rest\Put("/users/{id}")
      */
     public function updateUserAction(Request $request)
@@ -99,7 +99,7 @@ class UserController extends Controller
     }
 
     /**
-     * @Rest\View(serializerGroups={"user"})
+     * @Rest\View()
      * @Rest\Patch("/users/{id}")
      */
     public function patchUserAction(Request $request)
@@ -145,7 +145,7 @@ class UserController extends Controller
     }
 
     /**
-     * @Rest\View(serializerGroups={"user"})
+     * @Rest\View()
      * @Rest\Get("/users/{id}/suggestions")
      */
     public function getUserSuggestionsAction(Request $request)
@@ -165,13 +165,31 @@ class UserController extends Controller
                 ->getRepository('AppBundle:Place')
                 ->findAll();
 
+        $preferences = $this->get('doctrine.orm.entity_manager')
+                ->getRepository('AppBundle:Preference')
+                ->findByUser($user);
+
         foreach ($places as $place) {
-            if ($user->preferencesMatch($place->getThemes())) {
+            if ($this->preferencesMatch($preferences, $place->getThemes())) {
                 $suggestions[] = $place;
             }
         }
 
         return $suggestions;
+    }
+
+    public function preferencesMatch($preferences, $themes)
+    {
+        $matchValue = 0;
+        foreach ($preferences as $preference) {
+            foreach ($themes as $theme) {
+                if ($preference->match($theme)) {
+                    $matchValue += $preference->getValue() * $theme->getValue();
+                }
+            }
+        }
+
+        return $matchValue >= User::MATCH_VALUE_THRESHOLD;
     }
 
     private function userNotFound()

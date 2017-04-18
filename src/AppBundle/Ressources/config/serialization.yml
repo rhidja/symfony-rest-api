@@ -44,8 +44,6 @@ AppBundle\Entity\User:
             groups: ['user', 'preference']
         email:
             groups: ['user', 'preference']
-        preferences:
-            groups: ['user']
 
 AppBundle\Entity\Preference:
     attributes:
@@ -55,5 +53,3 @@ AppBundle\Entity\Preference:
             groups: ['user', 'preference']
         value:
             groups: ['user', 'preference']
-        user:
-            groups: ['preference']
