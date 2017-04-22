@@ -38,7 +38,7 @@ class PlaceController extends Controller
         /* @var $place Place */
 
         if (empty($place)) {
-            return \FOS\RestBundle\View\View::create(['message' => 'Place not found'], Response::HTTP_NOT_FOUND);
+            return $this->placeNotFound();
         }
 
         return $place;
@@ -77,7 +77,7 @@ class PlaceController extends Controller
         /* @var $place Place */
 
         if (!$place) {
-            return;
+            return $this->placeNotFound();
         }
 
         foreach ($place->getPrices() as $price) {
@@ -104,7 +104,7 @@ class PlaceController extends Controller
         /* @var $place Place */
 
         if (empty($place)) {
-            return \FOS\RestBundle\View\View::create(['message' => 'Place not found'], Response::HTTP_NOT_FOUND);
+            return $this->placeNotFound();
         }
 
         $form = $this->createForm(PlaceType::class, $place);
@@ -121,5 +121,10 @@ class PlaceController extends Controller
         } else {
             return $form;
         }
+    }
+
+    private function placeNotFound()
+    {
+        throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException('Place not found');
     }
 }
