@@ -5,6 +5,8 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Security\Core\User\UserInterface;
+use JMS\Serializer\Annotation\Groups;
+
 
 /**
 * @ORM\Entity()
@@ -18,32 +20,47 @@ class User implements UserInterface
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue
+     * @Groups({"user", "preference", "auth-token"})
      */
     protected $id;
 
     /**
      * @ORM\Column(type="string")
+     * @Groups({"user", "preference", "auth-token"})
      */
     protected $firstname;
 
     /**
      * @ORM\Column(type="string")
+     * @Groups({"user", "preference", "auth-token"})
      */
     protected $lastname;
 
     /**
      * @ORM\Column(type="string")
+     * @Groups({"user", "preference", "auth-token"})
      */
     protected $email;
 
     /**
      * @ORM\Column(type="string")
+     * @Groups({"user", "preference", "auth-token"})
      */
     protected $password;
 
     protected $plainPassword;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Preference", mappedBy="user")
+     * @Groups({"user"})
+     * @var Preference[]
+     */
     protected $preferences;
+
+    public function __construct()
+    {
+        $this->preferences = new ArrayCollection();
+    }
 
     /**
      * Get password
@@ -207,16 +224,26 @@ class User implements UserInterface
     }
 
     /**
-     * Set password
+     * Add preference
      *
-     * @param string $password
+     * @param \AppBundle\Entity\Preference $preference
      *
      * @return User
      */
-    public function setPreferences($preferences)
+    public function addPreference(\AppBundle\Entity\Preference $preference)
     {
-        $this->preferences = $preferences;
+        $this->preferences[] = $preference;
 
         return $this;
+    }
+
+    /**
+     * Remove preference
+     *
+     * @param \AppBundle\Entity\Preference $preference
+     */
+    public function removePreference(\AppBundle\Entity\Preference $preference)
+    {
+        $this->preferences->removeElement($preference);
     }
 }

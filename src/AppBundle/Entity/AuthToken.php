@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity()
@@ -14,23 +15,27 @@ class AuthToken
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue
+     * @Groups({"auth-token"})
      */
     protected $id;
 
     /**
      * @ORM\Column(type="string")
+     * @Groups({"auth-token"})
      */
     protected $value;
 
     /**
      * @ORM\Column(type="datetime")
      * @var \DateTime
+     * @Groups({"auth-token"})
      */
     protected $createdAt;
 
     /**
      * @ORM\ManyToOne(targetEntity="User")
      * @var User
+     * @Groups({"auth-token"})
      */
     protected $user;
 

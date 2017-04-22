@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity()
@@ -14,22 +15,26 @@ class Price
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue
+     * @Groups({"place", "price"})
      */
     protected $id;
 
     /**
      * @ORM\Column(type="string")
+     * @Groups({"place", "price"})
      */
     protected $type;
 
     /**
      * @ORM\Column(type="float")
+     * @Groups({"place", "price"})
      */
     protected $value;
 
     /**
      * @ORM\ManyToOne(targetEntity="Place", inversedBy="prices")
      * @var Place
+     * @Groups({"price"})
      */
     protected $place;
 

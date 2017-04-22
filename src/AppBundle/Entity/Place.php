@@ -4,6 +4,7 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use JMS\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity()
@@ -14,28 +15,33 @@ class Place
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
+     * @Groups({"place", "price", "theme"})
      * @ORM\GeneratedValue
      */
     protected $id;
 
     /**
      * @ORM\Column(type="string")
+     * @Groups({"place", "price", "theme"})
      */
     protected $name;
 
     /**
      * @ORM\Column(type="string")
+     * @Groups({"place", "price", "theme"})
      */
     protected $address;
 
     /**
      * @ORM\OneToMany(targetEntity="Price", mappedBy="place")
+     * @Groups({"place"})
      * @var Price[]
      */
     protected $prices;
 
     /**
      * @ORM\OneToMany(targetEntity="Theme", mappedBy="place")
+     * @Groups({"place"})
      * @var Theme[]
      */
     protected $themes;

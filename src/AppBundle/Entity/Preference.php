@@ -4,6 +4,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity()
@@ -15,25 +16,28 @@ class Preference
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue
+     * @Groups({"user", "preference"})
      */
     protected $id;
 
     /**
      * @ORM\Column(type="string")
+     * @Groups({"user", "preference"})
      */
     protected $name;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"user", "preference"})
      */
     protected $value;
 
     /**
      * @ORM\ManyToOne(targetEntity="User")
      * @var User
+     * @Groups({"preference"})
      */
     protected $user;
-
 
     public function match(Theme $theme)
     {

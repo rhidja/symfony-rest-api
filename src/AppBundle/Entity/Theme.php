@@ -4,6 +4,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity()
@@ -16,22 +17,26 @@ class Theme
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
+     * @Groups({"place", "theme"})
      * @ORM\GeneratedValue
      */
     protected $id;
 
     /**
      * @ORM\Column(type="string")
+     * @Groups({"place", "theme"})
      */
     protected $name;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"place", "theme"})
      */
     protected $value;
 
     /**
      * @ORM\ManyToOne(targetEntity="Place", inversedBy="themes")
+     * @Groups({"theme"})
      * @var Place
      */
     protected $place;
