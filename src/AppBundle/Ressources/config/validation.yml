@@ -69,3 +69,12 @@ AppBundle\Entity\Preference:
                 value: 0
             - LessThanOrEqual:
                 value: 10
+
+AppBundle\Entity\Credentials:
+    properties:
+        login:
+            - NotBlank: ~
+            - Type: string
+        password:
+            - NotBlank: ~
+            - Type: string

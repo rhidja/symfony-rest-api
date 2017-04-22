@@ -21,3 +21,7 @@ users:
 preferences:
     type:     rest
     resource: AppBundle\Controller\User\PreferenceController
+
+auth-tokens:
+    type:     rest
+    resource: AppBundle\Controller\AuthTokenController
