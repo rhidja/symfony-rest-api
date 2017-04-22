@@ -25,6 +25,13 @@ class UserController extends Controller
                 ->findAll();
         /* @var $users User[] */
 
+        foreach ($users as $user) {
+            $preferences = $this->get('doctrine.orm.entity_manager')
+                    ->getRepository('AppBundle:Preference')
+                    ->findByUser($user);
+            $user->setPreferences($preferences);
+        }
+
         return $users;
     }
 
