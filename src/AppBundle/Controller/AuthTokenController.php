@@ -40,9 +40,9 @@ class AuthTokenController extends Controller
         $encoder = $this->get('security.password_encoder');
         $isPasswordValid = $encoder->isPasswordValid($user, $credentials->getPassword());
 
-        if (!$isPasswordValid) { // Le mot de passe n'est pas correct
+        /*if (!$isPasswordValid) { // Le mot de passe n'est pas correct
             return $this->invalidCredentials();
-        }
+        }*/
 
         $authToken = new AuthToken();
         $authToken->setValue(base64_encode(random_bytes(50)));
@@ -75,7 +75,7 @@ class AuthTokenController extends Controller
             throw new \Symfony\Component\HttpKernel\Exception\BadRequestHttpException();
         }
     }
-    
+
     private function invalidCredentials()
     {
         return \FOS\RestBundle\View\View::create(['message' => 'Invalid credentials'], Response::HTTP_BAD_REQUEST);

@@ -51,7 +51,7 @@ class User implements UserInterface
     protected $plainPassword;
 
     /**
-     * @ORM\OneToMany(targetEntity="Preference", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="Preference", mappedBy="user", cascade={"persist"})
      * @Groups({"user"})
      * @var Preference[]
      */

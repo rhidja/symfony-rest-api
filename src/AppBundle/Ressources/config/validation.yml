@@ -9,6 +9,8 @@ AppBundle\Entity\Place:
         address:
             - NotBlank: ~
             - Type: string
+        prices:
+            - Valid: ~
 
 AppBundle\Entity\User:
     constraints:

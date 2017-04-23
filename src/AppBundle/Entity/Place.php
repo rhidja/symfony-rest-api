@@ -33,14 +33,14 @@ class Place
     protected $address;
 
     /**
-     * @ORM\OneToMany(targetEntity="Price", mappedBy="place")
+     * @ORM\OneToMany(targetEntity="Price", mappedBy="place", cascade={"persist"})
      * @Groups({"place"})
      * @var Price[]
      */
     protected $prices;
 
     /**
-     * @ORM\OneToMany(targetEntity="Theme", mappedBy="place")
+     * @ORM\OneToMany(targetEntity="Theme", mappedBy="place", cascade={"persist"})
      * @Groups({"place"})
      * @var Theme[]
      */
