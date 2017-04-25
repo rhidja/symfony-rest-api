@@ -13,6 +13,8 @@ use JMS\Serializer\Annotation\Groups;
 class Place
 {
     /**
+     * Identifiant unique du lieu
+     *
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @Groups({"place", "price", "theme"})

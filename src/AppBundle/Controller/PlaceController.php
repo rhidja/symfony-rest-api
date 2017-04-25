@@ -8,11 +8,16 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use FOS\RestBundle\Controller\Annotations as Rest; // alias pour toutes les annotations
 use AppBundle\Form\Type\PlaceType;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use AppBundle\Entity\Place;
 
 class PlaceController extends Controller
 {
     /**
+     * @ApiDoc(
+     *    description="Récupère la liste des lieux de l'application",
+     *    output= { "class"=Place::class, "collection"=true, "groups"={"place"} }
+     * )
      * @Rest\View(serializerGroups={"place"})
      * @Rest\Get("/places")
      */
@@ -45,6 +50,20 @@ class PlaceController extends Controller
     }
 
     /**
+     *
+     * @ApiDoc(
+     *    description="Crée un lieu dans l'application",
+     *    input={"class"=PlaceType::class, "name"=""},
+     *    statusCodes = {
+     *        201 = "Création avec succès",
+     *        400 = "Formulaire invalide"
+     *    },
+     *    responseMap={
+     *         201 = {"class"=Place::class, "groups"={"place"}},
+     *         400 = { "class"=PlaceType::class, "form_errors"=true, "name" = ""}
+     *    }
+     * )
+     *
      * @Rest\View(statusCode=Response::HTTP_CREATED, serializerGroups={"place"})
      * @Rest\Post("/places")
      */
