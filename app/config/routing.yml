@@ -5,27 +5,33 @@ app:
 places:
     type:     rest
     resource: AppBundle\Controller\PlaceController
+    prefix: /api
 
 prices:
     type:     rest
     resource: AppBundle\Controller\Place\PriceController
+    prefix: /api
 
 themes:
     type:     rest
     resource: AppBundle\Controller\Place\ThemeController
+    prefix: /api
 
 users:
     type:     rest
     resource: AppBundle\Controller\UserController
+    prefix: /api
 
 preferences:
     type:     rest
     resource: AppBundle\Controller\User\PreferenceController
+    prefix: /api
 
 auth-tokens:
     type:     rest
     resource: AppBundle\Controller\AuthTokenController
+    prefix: /api
 
 NelmioApiDocBundle:
     resource: "@NelmioApiDocBundle/Resources/config/routing.yml"
-    prefix:   /api/doc
+    prefix: /api/doc

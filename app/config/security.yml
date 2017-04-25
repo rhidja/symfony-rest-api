@@ -23,8 +23,8 @@ security:
             pattern: ^/api/doc
             security: false
 
-        main:
-            pattern: ^/
+        api:
+            pattern: ^/api
             stateless: true
             simple_preauth:
                 authenticator: auth_token_authenticator

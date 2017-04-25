@@ -81,9 +81,11 @@ fos_rest:
         include_format: false
     view:
         view_response_listener: true
+    zone:
+        - { path: ^/api }
     format_listener:
         rules:
-            - { path: '^/', priorities: ['json'], fallback_format: 'json' }
+            - { path: '^/api', priorities: ['json'], fallback_format: 'json' }
     exception:
         enabled: true
         messages:
