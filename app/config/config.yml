@@ -72,6 +72,8 @@ swiftmailer:
     password: '%mailer_password%'
     spool: { type: memory }
 
+nelmio_api_doc: ~
+
 fos_rest:
     serializer:
         serialize_null: true

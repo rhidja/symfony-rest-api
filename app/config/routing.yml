@@ -25,3 +25,7 @@ preferences:
 auth-tokens:
     type:     rest
     resource: AppBundle\Controller\AuthTokenController
+
+NelmioApiDocBundle:
+    resource: "@NelmioApiDocBundle/Resources/config/routing.yml"
+    prefix:   /api/doc
