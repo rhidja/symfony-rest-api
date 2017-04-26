@@ -17,6 +17,7 @@
         "doctrine/doctrine-cache-bundle": "^1.2",
         "doctrine/orm": "^2.5",
         "friendsofsymfony/rest-bundle": "^2.1",
+        "friendsofsymfony/user-bundle": "^2.0",
         "incenteev/composer-parameter-handler": "^2.0",
         "jms/serializer-bundle": "^1.4",
         "nelmio/api-doc-bundle": "^2.13",
