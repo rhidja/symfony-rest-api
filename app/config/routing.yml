@@ -1,20 +1,29 @@
+app:
+    resource: "@AppBundle/Controller/DefaultController.php"
+    type: annotation
+    prefix: /
+
 api:
-    resource: "@ApiBundle/Controller/"
+    resource: "@ApiBundle/Controller/DefaultController.php"
     type:     annotation
-    prefix:   /
+    prefix: /api
 
 user:
     resource: "@UserBundle/Controller/"
     type:     annotation
-    prefix:   /
+    prefix: /user
 
-app:
-    resource: "@AppBundle/Controller/DefaultController.php"
-    type: annotation
-
+# FOSUserBundle
 fos_user:
     resource: "@FOSUserBundle/Resources/config/routing/all.xml"
 
+# ApiBundle
+configurations:
+    type:     rest
+    resource: ApiBundle\Controller\SmartPackageConfigurationController
+    prefix: /api
+
+# AppBundle
 places:
     type:     rest
     resource: AppBundle\Controller\PlaceController
