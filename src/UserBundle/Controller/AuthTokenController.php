@@ -1,15 +1,15 @@
 <?php
-# src/AppBundle/Controller/AuthTokenController.php
-namespace AppBundle\Controller;
+# src/UserBundle/Controller/AuthTokenController.php
+namespace UserBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Controller\Annotations as Rest; // alias pour toutes les annotations
-use AppBundle\Form\Type\CredentialsType;
-use AppBundle\Entity\AuthToken;
-use AppBundle\Entity\Credentials;
+use UserBundle\Form\Type\CredentialsType;
+use UserBundle\Entity\AuthToken;
+use UserBundle\Entity\Credentials;
 
 class AuthTokenController extends Controller
 {
@@ -30,8 +30,10 @@ class AuthTokenController extends Controller
 
         $em = $this->get('doctrine.orm.entity_manager');
 
-        $user = $em->getRepository('AppBundle:User')
-            ->findOneByEmail($credentials->getLogin());
+        $user = $em->getRepository('UserBundle:User')
+            ->findOneByUsername($credentials->getUsername());
+
+            var_dump($user);
 
         if (!$user) { // L'utilisateur n'existe pas
             return $this->invalidCredentials();
@@ -40,9 +42,9 @@ class AuthTokenController extends Controller
         $encoder = $this->get('security.password_encoder');
         $isPasswordValid = $encoder->isPasswordValid($user, $credentials->getPassword());
 
-        /*if (!$isPasswordValid) { // Le mot de passe n'est pas correct
+        if (!$isPasswordValid) { // Le mot de passe n'est pas correct
             return $this->invalidCredentials();
-        }*/
+        }
 
         $authToken = new AuthToken();
         $authToken->setValue(base64_encode(random_bytes(50)));
@@ -62,7 +64,7 @@ class AuthTokenController extends Controller
     public function removeAuthTokenAction(Request $request)
     {
         $em = $this->get('doctrine.orm.entity_manager');
-        $authToken = $em->getRepository('AppBundle:AuthToken')
+        $authToken = $em->getRepository('UserBundle:AuthToken')
                     ->find($request->get('id'));
         /* @var $authToken AuthToken */
 

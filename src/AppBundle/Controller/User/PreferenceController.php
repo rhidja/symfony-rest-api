@@ -20,7 +20,7 @@ class PreferenceController extends Controller
     public function getPreferencesAction(Request $request)
     {
         $user = $this->get('doctrine.orm.entity_manager')
-                ->getRepository('AppBundle:User')
+                ->getRepository('UserBundle:User')
                 ->find($request->get('id'));
         /* @var $user User */
 
@@ -42,7 +42,7 @@ class PreferenceController extends Controller
     public function postPreferencesAction(Request $request)
     {
         $user = $this->get('doctrine.orm.entity_manager')
-                ->getRepository('AppBundle:User')
+                ->getRepository('UserBundle:User')
                 ->find($request->get('id'));
         /* @var $user User */
 

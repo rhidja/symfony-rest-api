@@ -1,6 +1,6 @@
 <?php
-# src/AppBundle/Entity/AuthToken.php
-namespace AppBundle\Entity;
+# src/UserBundle/Entity/AuthToken.php
+namespace UserBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Groups;

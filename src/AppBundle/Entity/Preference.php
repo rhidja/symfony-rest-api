@@ -33,7 +33,7 @@ class Preference
     protected $value;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\ManyToOne(targetEntity="UserBundle\Entity\User")
      * @var User
      * @Groups({"preference"})
      */
@@ -100,11 +100,11 @@ class Preference
     /**
      * Set user
      *
-     * @param \AppBundle\Entity\User $user
+     * @param \UserBundle\Entity\User $user
      *
      * @return Preference
      */
-    public function setUser(\AppBundle\Entity\User $user = null)
+    public function setUser(\UserBundle\Entity\User $user = null)
     {
         $this->user = $user;
 
@@ -114,7 +114,7 @@ class Preference
     /**
      * Get user
      *
-     * @return \AppBundle\Entity\User
+     * @return \UserBundle\Entity\User
      */
     public function getUser()
     {

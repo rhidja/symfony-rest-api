@@ -41,7 +41,7 @@ themes:
 
 users:
     type:     rest
-    resource: AppBundle\Controller\UserController
+    resource: UserBundle\Controller\UserController
     prefix: /api
 
 preferences:
@@ -51,7 +51,7 @@ preferences:
 
 auth-tokens:
     type:     rest
-    resource: AppBundle\Controller\AuthTokenController
+    resource: UserBundle\Controller\AuthTokenController
     prefix: /api
 
 NelmioApiDocBundle:

@@ -29,6 +29,10 @@ security:
             pattern: ^/api/doc
             security: false
 
+        token:
+            pattern: ^/api/auth-tokens$
+            security: false
+
         api:
             pattern: ^/api
             stateless: true
@@ -48,6 +52,7 @@ security:
             anonymous:    true
 
     access_control:
+        - { path: ^/api/auth-tokens$, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }

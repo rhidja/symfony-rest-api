@@ -1,6 +1,6 @@
 <?php
-# src/AppBundle/Form/Type/CredentialsType.php
-namespace AppBundle\Form\Type;
+# src/UserBundle/Form/Type/CredentialsType.php
+namespace UserBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -10,14 +10,14 @@ class CredentialsType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('login');
+        $builder->add('username');
         $builder->add('password');
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => 'AppBundle\Entity\Credentials',
+            'data_class' => 'UserBundle\Entity\Credentials',
             'csrf_protection' => false
         ]);
     }

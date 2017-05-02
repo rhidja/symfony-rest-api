@@ -9,21 +9,21 @@ services:
     #    arguments: ['@another_service_name', 'plain_value', '%parameter_name%']
 
     auth_token_user_provider:
-        class: AppBundle\Security\AuthTokenUserProvider
+        class: UserBundle\Security\AuthTokenUserProvider
         arguments: ["@auth_token_repository", "@user_repository"]
         public:    false
 
     auth_token_repository:
         class:   Doctrine\ORM\EntityManager
         factory: ["@doctrine.orm.entity_manager", "getRepository"]
-        arguments: ["AppBundle:AuthToken"]
+        arguments: ["UserBundle:AuthToken"]
 
     user_repository:
         class:   Doctrine\ORM\EntityManager
         factory: ["@doctrine.orm.entity_manager", "getRepository"]
-        arguments: ["AppBundle:User"]
+        arguments: ["UserBundle:User"]
 
     auth_token_authenticator:
-        class:     AppBundle\Security\AuthTokenAuthenticator
+        class:     UserBundle\Security\AuthTokenAuthenticator
         arguments: ["@security.http_utils"]
         public:    false

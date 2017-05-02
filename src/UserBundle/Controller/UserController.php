@@ -1,6 +1,6 @@
 <?php
-# src/AppBundle/Controller/UserController.php
-namespace AppBundle\Controller;
+# src/UserBundle/Controller/UserController.php
+namespace UserBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -9,8 +9,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Controller\Annotations as Rest; // alias pour toutes les annotations
-use AppBundle\Form\Type\UserType;
-use AppBundle\Entity\User;
+use UserBundle\Form\Type\UserType;
+use UserBundle\Entity\User;
 
 class UserController extends Controller
 {
@@ -21,7 +21,7 @@ class UserController extends Controller
     public function getUsersAction(Request $request)
     {
         $users = $this->get('doctrine.orm.entity_manager')
-                ->getRepository('AppBundle:User')
+                ->getRepository('UserBundle:User')
                 ->findAll();
         /* @var $users User[] */
 
@@ -35,7 +35,7 @@ class UserController extends Controller
     public function getUserAction(Request $request)
     {
         $user = $this->get('doctrine.orm.entity_manager')
-                ->getRepository('AppBundle:User')
+                ->getRepository('UserBundle:User')
                 ->find($request->get('user_id'));
         /* @var $user User */
 
@@ -79,7 +79,7 @@ class UserController extends Controller
     public function removeUserAction(Request $request)
     {
         $em = $this->get('doctrine.orm.entity_manager');
-        $user = $em->getRepository('AppBundle:User')
+        $user = $em->getRepository('UserBundle:User')
         ->find($request->get('id'));
         /* @var $user User */
 
@@ -110,7 +110,7 @@ class UserController extends Controller
     private function updateUser(Request $request, $clearMissing)
     {
         $user = $this->get('doctrine.orm.entity_manager')
-        ->getRepository('AppBundle:User')
+        ->getRepository('UserBundle:User')
         ->find($request->get('id')); // L'identifiant en tant que paramètre n'est plus nécessaire
         /* @var $user User */
 
@@ -151,7 +151,7 @@ class UserController extends Controller
     public function getUserSuggestionsAction(Request $request)
     {
         $user = $this->get('doctrine.orm.entity_manager')
-                ->getRepository('AppBundle:User')
+                ->getRepository('UserBundle:User')
                 ->find($request->get('id'));
         /* @var $user User */
 
