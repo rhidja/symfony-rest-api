@@ -1,0 +1,20 @@
+{# src/UserBundle/Resources/views/Registration/confirmed.html.twig #}
+
+{% extends "layout.html.twig" %}
+
+{% block title %}
+	Confirmation d'inscription
+{% endblock %}
+
+{% block content %}
+	<div class="container">
+		<div class="row">
+			<div class="col-md-6 col-md-offset-3">
+			    <p>{{ 'registration.confirmed'|trans({'%username%': user.username}) }}</p>
+			    {% if targetUrl %}
+			    <p><a href="{{ targetUrl }}">{{ 'registration.back'|trans }}</a></p>
+			    {% endif %}
+			</div>
+		</div>
+	</div>
+{% endblock %}

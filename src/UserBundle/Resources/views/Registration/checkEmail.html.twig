@@ -1,0 +1,7 @@
+{# src/UserBundle/Resources/views/Registration/checkEmail.html.twig #}
+
+{% extends "base.html.twig" %}
+
+{% block fos_user_content %}
+    <p>{{ 'registration.check_email'|trans({'%email%': user.email}) }}</p>
+{% endblock fos_user_content %}
