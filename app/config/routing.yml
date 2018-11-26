@@ -3,11 +3,6 @@ app:
     type: annotation
     prefix: /
 
-api:
-    resource: "@ApiBundle/Controller/DefaultController.php"
-    type:     annotation
-    prefix: /api
-
 user:
     resource: "@UserBundle/Controller/"
     type:     annotation
@@ -16,12 +11,6 @@ user:
 # FOSUserBundle
 fos_user:
     resource: "@FOSUserBundle/Resources/config/routing/all.xml"
-
-# ApiBundle
-configurations:
-    type:     rest
-    resource: ApiBundle\Controller\SmartPackageConfigurationController
-    prefix: /api
 
 # AppBundle
 places:
