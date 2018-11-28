@@ -15,6 +15,8 @@ use JMS\Serializer\Annotation\Groups;
 class Theme
 {
     /**
+     * L'identifiant unique d'un thème
+     *
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @Groups({"place", "theme"})
@@ -23,12 +25,16 @@ class Theme
     protected $id;
 
     /**
+     * Le nom d'un thème
+     *
      * @ORM\Column(type="string")
      * @Groups({"place", "theme"})
      */
     protected $name;
 
     /**
+     * La valeur d'un thème
+     *
      * @ORM\Column(type="integer")
      * @Groups({"place", "theme"})
      */

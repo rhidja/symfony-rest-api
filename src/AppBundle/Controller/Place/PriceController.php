@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use FOS\RestBundle\Controller\Annotations as Rest; // alias pour toutes les annotations
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use AppBundle\Form\Type\PriceType;
 use AppBundle\Entity\Price;
 
@@ -14,6 +15,11 @@ class PriceController extends Controller
 {
 
     /**
+    * @ApiDoc(
+    *    description="Récupère les différents prix d'un lieu",
+    *    output= { "class"=Price::class, "collection"=true, "groups"={"price"} }
+    * )
+    *
      * @Rest\View(serializerGroups={"price"})
      * @Rest\Get("/places/{id}/prices")
      */
@@ -33,6 +39,11 @@ class PriceController extends Controller
 
 
     /**
+     * @ApiDoc(
+     *    description="Ajouter un prix à un lieu",
+     *    output= { "class"=Price::class, "collection"=true, "groups"={"price"} }
+     * )
+     *
      * @Rest\View(statusCode=Response::HTTP_CREATED, serializerGroups={"price"})
      * @Rest\Post("/places/{id}/prices")
      */

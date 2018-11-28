@@ -8,12 +8,18 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use FOS\RestBundle\Controller\Annotations as Rest; // alias pour toutes les annotations
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use AppBundle\Form\Type\PreferenceType;
 use AppBundle\Entity\Preference;
 
 class PreferenceController extends Controller
 {
     /**
+     * @ApiDoc(
+     *    description="Les différents prix par places",
+     *    output= { "class"=User::class, "collection"=true, "groups"={"preference"} }
+     * )
+     *
      * @Rest\View(serializerGroups={"preference"})
      * @Rest\Get("/users/{id}/preferences")
      */
@@ -36,6 +42,11 @@ class PreferenceController extends Controller
     }
 
      /**
+     * @ApiDoc(
+     *    description="Les différents prix par places",
+     *    output= { "class"=User::class, "collection"=true, "groups"={"preference"} }
+     * )
+     *
      * @Rest\View(statusCode=Response::HTTP_CREATED, serializerGroups={"preference"})
      * @Rest\Post("/users/{id}/preferences")
      */

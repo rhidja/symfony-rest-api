@@ -33,8 +33,6 @@ class AuthTokenController extends Controller
         $user = $em->getRepository('UserBundle:User')
             ->findOneByUsername($credentials->getUsername());
 
-            var_dump($user);
-
         if (!$user) { // L'utilisateur n'existe pas
             return $this->invalidCredentials();
         }

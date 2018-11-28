@@ -13,6 +13,8 @@ use JMS\Serializer\Annotation\Groups;
 class Preference
 {
     /**
+     * Identifiant unique d'une préférence
+     *
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue
@@ -21,12 +23,16 @@ class Preference
     protected $id;
 
     /**
+     * Nom d'une préférence
+     *
      * @ORM\Column(type="string")
      * @Groups({"user", "preference"})
      */
     protected $name;
 
     /**
+     * Valeur d'une préférence
+     *
      * @ORM\Column(type="integer")
      * @Groups({"user", "preference"})
      */

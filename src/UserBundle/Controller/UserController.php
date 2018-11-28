@@ -9,12 +9,17 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Controller\Annotations as Rest; // alias pour toutes les annotations
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use UserBundle\Form\Type\UserType;
 use UserBundle\Entity\User;
 
 class UserController extends Controller
 {
     /**
+    * @ApiDoc(
+    *    description="La liste des utilisateurs",
+    *    output= { "class"=User::class, "collection"=true, "groups"={"user"} }
+    * )
      * @Rest\View(serializerGroups={"user"})
      * @Rest\Get("/users")
      */
@@ -29,6 +34,11 @@ class UserController extends Controller
     }
 
     /**
+    * @ApiDoc(
+    *    description="Récupérer un utilisateur par son id",
+    *    output= { "class"=User::class, "collection"=true, "groups"={"user"} }
+    * )
+    *
      * @Rest\View(serializerGroups={"user"})
      * @Rest\Get("/users/{user_id}")
      */

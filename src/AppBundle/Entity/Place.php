@@ -23,18 +23,24 @@ class Place
     protected $id;
 
     /**
+     * Le nom d'un lieu
+     *
      * @ORM\Column(type="string")
      * @Groups({"place", "price", "theme"})
      */
     protected $name;
 
     /**
+     * L'adresse d'un lieu
+     *
      * @ORM\Column(type="string")
      * @Groups({"place", "price", "theme"})
      */
     protected $address;
 
     /**
+     * La liste des prix d'un lieu
+     *
      * @ORM\OneToMany(targetEntity="Price", mappedBy="place", cascade={"persist"})
      * @Groups({"place"})
      * @var Price[]
@@ -42,6 +48,8 @@ class Place
     protected $prices;
 
     /**
+     * La liste des thèmes d'un lieu
+     *
      * @ORM\OneToMany(targetEntity="Theme", mappedBy="place", cascade={"persist"})
      * @Groups({"place"})
      * @var Theme[]

@@ -14,6 +14,8 @@ use JMS\Serializer\Annotation\Groups;
 class User extends BaseUser
 {
     /**
+     * Identifiant unique d'un utilisateur
+     *
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -22,6 +24,8 @@ class User extends BaseUser
     protected $id;
 
     /**
+     * Le nom d'un utilisateur
+     *
 	 * @var string
 	 *
 	 * @ORM\Column(name="firstname", type="string", length=32, nullable=true)
@@ -30,6 +34,8 @@ class User extends BaseUser
 	protected $firstname;
 
 	/**
+     * Le prénom d'un utilisateur
+     *
 	 * @var string
 	 *
 	 * @ORM\Column(name="lastname", type="string", length=32, nullable=true)
@@ -38,6 +44,8 @@ class User extends BaseUser
 	protected $lastname;
 
 	/**
+     * Le numéro de téléphone d'un utilisateur
+     *
 	 * @var string
 	 *
 	 * @ORM\Column(name="mobile", type="string", length=16, nullable=true)

@@ -12,6 +12,8 @@ use JMS\Serializer\Annotation\Groups;
 class Price
 {
     /**
+     * L'identifiant unique d'un prix
+     *
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue
@@ -20,12 +22,16 @@ class Price
     protected $id;
 
     /**
+     * Le type d'un prix
+     *
      * @ORM\Column(type="string")
      * @Groups({"place", "price"})
      */
     protected $type;
 
     /**
+     * La valeur d'un prix
+     *
      * @ORM\Column(type="float")
      * @Groups({"place", "price"})
      */
