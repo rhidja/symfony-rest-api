@@ -15,7 +15,7 @@ class PlaceController extends Controller
 {
     /**
      * @ApiDoc(
-     *    description="Récupère la liste des lieux de l'application",
+     *    description="Récupère la liste des lieux",
      *    output= { "class"=Place::class, "collection"=true, "groups"={"place"} }
      * )
      * @Rest\View(serializerGroups={"place"})
@@ -23,23 +23,28 @@ class PlaceController extends Controller
      */
     public function getPlacesAction(Request $request)
     {
-        $places = $this->get('doctrine.orm.entity_manager')
-                ->getRepository('AppBundle:Place')
-                ->findAll();
+        $em = $this->getEm();
+        $places = $em->getRepository('AppBundle:Place')
+                     ->findAll();
         /* @var $places Place[] */
 
         return $places;
     }
 
     /**
+     * @ApiDoc(
+     *    description="Récupère un lieu par son Id",
+     *    output= { "class"=Place::class, "collection"=true, "groups"={"place"} }
+     * )
+     *
      * @Rest\View(serializerGroups={"place"})
      * @Rest\Get("/places/{id}")
      */
     public function getPlaceAction(Request $request)
     {
-        $place = $this->get('doctrine.orm.entity_manager')
-                ->getRepository('AppBundle:Place')
-                ->find($request->get('id')); // L'identifiant en tant que paramétre n'est plus nécessaire
+        $em = $this->getEm();
+        $place = $em->getRepository('AppBundle:Place')
+                    ->find($request->get('id'));
         /* @var $place Place */
 
         if (empty($place)) {
@@ -52,7 +57,7 @@ class PlaceController extends Controller
     /**
      *
      * @ApiDoc(
-     *    description="Crée un lieu dans l'application",
+     *    description="Crée un lieu",
      *    input={"class"=PlaceType::class, "name"=""},
      *    statusCodes = {
      *        201 = "Création avec succès",
@@ -75,9 +80,10 @@ class PlaceController extends Controller
         $form->submit($request->request->all()); // Validation des données
 
         if ($form->isValid()) {
-            $em = $this->get('doctrine.orm.entity_manager');
-            $em->persist($place);
-            $em->flush();
+
+            $em = $this->getEm();
+            $em->persist($place)->flush();
+
             return $place;
         } else {
             return $form;
@@ -85,14 +91,27 @@ class PlaceController extends Controller
     }
 
     /**
+     * @ApiDoc(
+     *    description="Supprime un lieu",
+     *    input={"class"=PlaceType::class, "name"=""},
+     *    statusCodes = {
+     *        201 = "Création avec succès",
+     *        400 = "Formulaire invalide"
+     *    },
+     *    responseMap={
+     *         201 = {"class"=Place::class, "groups"={"place"}},
+     *         400 = { "class"=PlaceType::class, "form_errors"=true, "name" = ""}
+     *    }
+     * )
+     *
      * @Rest\View(statusCode=Response::HTTP_NO_CONTENT, serializerGroups={"place"})
      * @Rest\Delete("/places/{id}")
      */
     public function removePlaceAction(Request $request)
     {
-        $em = $this->get('doctrine.orm.entity_manager');
+        $em = $this->getEm();
         $place = $em->getRepository('AppBundle:Place')
-        ->find($request->get('id'));
+                    ->find($request->get('id'));
         /* @var $place Place */
 
         if (!$place) {
@@ -107,6 +126,19 @@ class PlaceController extends Controller
     }
 
     /**
+     * @ApiDoc(
+     *    description="Mis à jour un lieu",
+     *    input={"class"=PlaceType::class, "name"=""},
+     *    statusCodes = {
+     *        201 = "Création avec succès",
+     *        400 = "Formulaire invalide"
+     *    },
+     *    responseMap={
+     *         201 = {"class"=Place::class, "groups"={"place"}},
+     *         400 = { "class"=PlaceType::class, "form_errors"=true, "name" = ""}
+     *    }
+     * )
+     *
      * @Rest\View(serializerGroups={"place"})
      * @Rest\Patch("/places/{id}")
      */
@@ -117,10 +149,9 @@ class PlaceController extends Controller
 
     private function updatePlace(Request $request, $clearMissing)
     {
-        $place = $this->get('doctrine.orm.entity_manager')
-                ->getRepository('AppBundle:Place')
-                ->find($request->get('id')); // L'identifiant en tant que paramètre n'est plus nécessaire
-        /* @var $place Place */
+        $em = $this->getEm();
+        $place = $em->getRepository('AppBundle:Place')
+                    ->find($request->get('id'));
 
         if (empty($place)) {
             return $this->placeNotFound();
@@ -128,14 +159,13 @@ class PlaceController extends Controller
 
         $form = $this->createForm(PlaceType::class, $place);
 
-        // Le paramètre false dit à Symfony de garder les valeurs dans notre
-        // entité si l'utilisateur n'en fournit pas une dans sa requête
         $form->submit($request->request->all(), $clearMissing);
 
         if ($form->isValid()) {
-            $em = $this->get('doctrine.orm.entity_manager');
-            $em->persist($place);
-            $em->flush();
+
+            $em = $this->getEm();
+            $em->persist($place)->flush();
+
             return $place;
         } else {
             return $form;
@@ -145,5 +175,10 @@ class PlaceController extends Controller
     private function placeNotFound()
     {
         throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException('Place not found');
+    }
+
+    private function getEm()
+    {
+        return $this->get('doctrine.orm.entity_manager');
     }
 }
