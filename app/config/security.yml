@@ -1,8 +1,8 @@
 # To get started with security, check out the documentation:
-# http://symfony.com/doc/current/security.html
+# https://symfony.com/doc/current/security.html
 security:
 
-    # Ajout d'un encoder pour notre entité USer
+    # https://symfony.com/doc/current/security.html#b-configuring-how-users-are-loaded
     encoders:
         FOS\UserBundle\Model\UserInterface:
             algorithm: bcrypt
@@ -61,5 +61,5 @@ security:
             # http://symfony.com/doc/current/security.html#a-configuring-how-your-users-will-authenticate
             #http_basic: ~
 
-            # http://symfony.com/doc/current/cookbook/security/form_login_setup.html
+            # https://symfony.com/doc/current/security/form_login_setup.html
             #form_login: ~
