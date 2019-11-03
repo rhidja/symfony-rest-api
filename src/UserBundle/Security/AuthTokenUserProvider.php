@@ -4,7 +4,6 @@ namespace UserBundle\Security;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
-use Symfony\Component\Security\Core\User\User;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 
@@ -29,7 +28,6 @@ class AuthTokenUserProvider implements UserProviderInterface
 
     public function refreshUser(UserInterface $user)
     {
-        // Le systéme d'authentification est stateless, on ne doit donc jamais appeler la méthode refreshUser
         throw new UnsupportedUserException();
     }
 

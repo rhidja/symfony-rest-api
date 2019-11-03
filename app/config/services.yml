@@ -48,3 +48,7 @@ services:
     # AppBundle\Service\ExampleService:
     #     arguments:
     #         $someArgument: 'some_value'
+
+    UserBundle\Security\AuthTokenAuthenticator:
+        arguments:
+            - '@security.http_utils'
