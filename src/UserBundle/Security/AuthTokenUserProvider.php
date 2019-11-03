@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
+use UserBundle\Entity\User;
 
 class AuthTokenUserProvider implements UserProviderInterface
 {
@@ -33,6 +34,6 @@ class AuthTokenUserProvider implements UserProviderInterface
 
     public function supportsClass($class)
     {
-        return 'UserBundle\Entity\User' === $class;
+        return User::class === $class;
     }
 }
