@@ -9,7 +9,7 @@ use JMS\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="fos_user")
+ * @ORM\Table(name="user")
  */
 class User extends BaseUser
 {
