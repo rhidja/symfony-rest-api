@@ -1,12 +1,10 @@
 <?php
-# src/UserBundle/Security/AuthTokenAuthenticator.php
 namespace UserBundle\Security;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\PreAuthenticatedToken;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
@@ -18,7 +16,7 @@ class AuthTokenAuthenticator implements SimplePreAuthenticatorInterface, Authent
     /**
     * Durée de validité du token en secondes, 12 heures
     */
-    const TOKEN_VALIDITY_DURATION = 12 * 3600;
+    const TOKEN_VALIDITY_DURATION = 43200;
 
     protected $httpUtils;
 
