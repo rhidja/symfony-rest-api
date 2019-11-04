@@ -1,53 +1,68 @@
 <?php
-# src/UserBundle/Controller/UserController.php
 namespace UserBundle\Controller;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Doctrine\ORM\EntityManagerInterface;
+use FOS\RestBundle\Controller\Annotations as Rest;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
-use FOS\RestBundle\Controller\Annotations as Rest; // alias pour toutes les annotations
-use Nelmio\ApiDocBundle\Annotation\ApiDoc;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use UserBundle\Form\Type\UserType;
 use UserBundle\Entity\User;
 
-class UserController extends Controller
+class UserController extends AbstractController
 {
     /**
-    * @ApiDoc(
-    *    description="La liste des utilisateurs",
-    *    output= { "class"=User::class, "collection"=true, "groups"={"user"} }
-    * )
-     * @Rest\View(serializerGroups={"user"})
+     * @var EntityManagerInterface
+     */
+    protected $em;
+
+    /**
+     * UserController constructor.
+     * @param EntityManagerInterface $em
+     */
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em = $em;
+    }
+
+    /**
+     * @ApiDoc(
+     *    description="La liste des utilisateurs",
+     *    output= { "class"=User::class, "collection"=true, "groups"={"users"} }
+     * )
+     *
+     * @param Request $request
+     * @return array
+     *
+     * @Rest\View(serializerGroups={"users"})
      * @Rest\Get("/users")
      */
     public function getUsersAction(Request $request)
     {
-        $users = $this->get('doctrine.orm.entity_manager')
-                ->getRepository('UserBundle:User')
-                ->findAll();
-        /* @var $users User[] */
+        $users = $this->em->getRepository('UserBundle:User')
+                    ->findAll();
 
         return $users;
     }
 
     /**
-    * @ApiDoc(
-    *    description="Récupérer un utilisateur par son id",
-    *    output= { "class"=User::class, "collection"=true, "groups"={"user"} }
-    * )
-    *
-     * @Rest\View(serializerGroups={"user"})
+     * @ApiDoc(
+     *    description="Récupérer un utilisateur par son id",
+     *    output= { "class"=User::class, "collection"=true, "groups"={"users"} }
+     * )
+     *
+     * @param Request $request
+     * @return object|void|null
+     *
+     * @Rest\View(serializerGroups={"users"})
      * @Rest\Get("/users/{user_id}")
      */
     public function getUserAction(Request $request)
     {
-        $user = $this->get('doctrine.orm.entity_manager')
-                ->getRepository('UserBundle:User')
-                ->find($request->get('user_id'));
-        /* @var $user User */
+        $user = $this->em->getRepository('UserBundle:User')
+                         ->find($request->get('user_id'));
 
         if (empty($user)) {
             return $this->userNotFound();
@@ -57,10 +72,14 @@ class UserController extends Controller
     }
 
     /**
-     * @Rest\View(statusCode=Response::HTTP_CREATED, serializerGroups={"user"})
+     * @param Request $request
+     * @param UserPasswordEncoderInterface $encoder
+     * @return \Symfony\Component\Form\FormInterface|User
+     *
+     * @Rest\View(statusCode=Response::HTTP_CREATED, serializerGroups={"users"})
      * @Rest\Post("/users")
      */
-    public function postUsersAction(Request $request)
+    public function postUsersAction(Request $request, UserPasswordEncoderInterface $encoder)
     {
         $user = new User();
         $form = $this->createForm(UserType::class, $user, ['validation_groups'=>['Default', 'New']]);
@@ -68,14 +87,11 @@ class UserController extends Controller
         $form->submit($request->request->all());
 
         if ($form->isValid()) {
-            $encoder = $this->get('security.password_encoder');
-            // le mot de passe en claire est encodé avant la sauvegarde
             $encoded = $encoder->encodePassword($user, $user->getPlainPassword());
             $user->setPassword($encoded);
 
-            $em = $this->get('doctrine.orm.entity_manager');
-            $em->persist($user);
-            $em->flush();
+            $this->em->persist($user);
+            $this->em->flush();
             return $user;
         } else {
             return $form;
@@ -83,55 +99,68 @@ class UserController extends Controller
     }
 
     /**
-     * @Rest\View(statusCode=Response::HTTP_NO_CONTENT, serializerGroups={"user"})
+     *
+     * @param Request $request
+     *
+     * @Rest\View(statusCode=Response::HTTP_NO_CONTENT, serializerGroups={"users"})
      * @Rest\Delete("/users/{id}")
      */
     public function removeUserAction(Request $request)
     {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $user = $em->getRepository('UserBundle:User')
-        ->find($request->get('id'));
-        /* @var $user User */
+        $user = $this->em->getRepository('UserBundle:User')
+                   ->find($request->get('id'));
 
         if ($user) {
-            $em->remove($user);
-            $em->flush();
+            $this->em->remove($user);
+            $this->em->flush();
         }
     }
 
     /**
-     * @Rest\View(serializerGroups={"user"})
+     * @param Request $request
+     * @param UserPasswordEncoderInterface $encoder
+     * @return object|\Symfony\Component\Form\FormInterface|void|null
+     *
+     * @Rest\View(serializerGroups={"users"})
      * @Rest\Put("/users/{id}")
      */
-    public function updateUserAction(Request $request)
+    public function updateUserAction(Request $request, UserPasswordEncoderInterface $encoder)
     {
-        return $this->updateUser($request, true);
+        return $this->updateUser($request, $encoder,true);
     }
 
     /**
-     * @Rest\View(serializerGroups={"user"})
+     *
+     * @param Request $request
+     * @param UserPasswordEncoderInterface $encoder
+     * @return object|\Symfony\Component\Form\FormInterface|void|null
+     *
+     * @Rest\View(serializerGroups={"users"})
      * @Rest\Patch("/users/{id}")
      */
-    public function patchUserAction(Request $request)
+    public function patchUserAction(Request $request, UserPasswordEncoderInterface $encoder)
     {
-        return $this->updateUser($request, false);
+        return $this->updateUser($request, $encoder, false);
     }
 
-    private function updateUser(Request $request, $clearMissing)
+    /**
+     * @param Request $request
+     * @param UserPasswordEncoderInterface $encoder
+     * @param $clearMissing
+     * @return object|\Symfony\Component\Form\FormInterface|void|null
+     */
+    private function updateUser(Request $request, UserPasswordEncoderInterface $encoder, $clearMissing)
     {
-        $user = $this->get('doctrine.orm.entity_manager')
-        ->getRepository('UserBundle:User')
-        ->find($request->get('id')); // L'identifiant en tant que paramètre n'est plus nécessaire
-        /* @var $user User */
+        $user = $this->em->getRepository('UserBundle:User')->find($request->get('id'));
 
         if (empty($user)) {
             return $this->userNotFound();
         }
 
-        if ($clearMissing) { // Si une mise à jour complète, le mot de passe doit être validé
+        if ($clearMissing) {
             $options = ['validation_groups'=>['Default', 'FullUpdate']];
         } else {
-            $options = []; // Le groupe de validation par défaut de Symfony est Default
+            $options = [];
         }
 
         $form = $this->createForm(UserType::class, $user, $options);
@@ -141,13 +170,11 @@ class UserController extends Controller
         if ($form->isValid()) {
             // Si l'utilisateur veut changer son mot de passe
             if (!empty($user->getPlainPassword())) {
-                $encoder = $this->get('security.password_encoder');
                 $encoded = $encoder->encodePassword($user, $user->getPlainPassword());
                 $user->setPassword($encoded);
             }
-            $em = $this->get('doctrine.orm.entity_manager');
-            $em->merge($user);
-            $em->flush();
+            $this->em->merge($user);
+            $this->em->flush();
             return $user;
         } else {
             return $form;
@@ -155,29 +182,23 @@ class UserController extends Controller
     }
 
     /**
-     * @Rest\View(serializerGroups={"user"})
+     * @param Request $request
+     * @return array|void
+     *
+     * @Rest\View(serializerGroups={"users"})
      * @Rest\Get("/users/{id}/suggestions")
      */
     public function getUserSuggestionsAction(Request $request)
     {
-        $user = $this->get('doctrine.orm.entity_manager')
-                ->getRepository('UserBundle:User')
-                ->find($request->get('id'));
-        /* @var $user User */
+        $user = $this->em->getRepository('UserBundle:User')->find($request->get('id'));
 
         if (empty($user)) {
             return $this->userNotFound();
         }
 
         $suggestions = [];
-
-        $places = $this->get('doctrine.orm.entity_manager')
-                ->getRepository('AppBundle:Place')
-                ->findAll();
-
-        $preferences = $this->get('doctrine.orm.entity_manager')
-                ->getRepository('AppBundle:Preference')
-                ->findByUser($user);
+        $places = $this->em->getRepository('AppBundle:Place')->findAll();
+        $preferences = $this->em->getRepository('AppBundle:Preference')->findByUser($user);
 
         foreach ($places as $place) {
             if ($this->preferencesMatch($preferences, $place->getThemes())) {
@@ -188,6 +209,11 @@ class UserController extends Controller
         return $suggestions;
     }
 
+    /**
+     * @param $preferences
+     * @param $themes
+     * @return bool
+     */
     public function preferencesMatch($preferences, $themes)
     {
         $matchValue = 0;
@@ -202,6 +228,9 @@ class UserController extends Controller
         return $matchValue >= User::MATCH_VALUE_THRESHOLD;
     }
 
+    /**
+     *
+     */
     private function userNotFound()
     {
         throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException('User not found');

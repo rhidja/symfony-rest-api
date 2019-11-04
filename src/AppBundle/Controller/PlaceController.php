@@ -1,32 +1,47 @@
 <?php
-# src/AppBundle/Controller/PlaceController.php
 namespace AppBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
-use FOS\RestBundle\Controller\Annotations as Rest; // alias pour toutes les annotations
+use FOS\RestBundle\Controller\Annotations as Rest;
 use AppBundle\Form\Type\PlaceType;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use AppBundle\Entity\Place;
 
-class PlaceController extends Controller
+class PlaceController extends AbstractController
 {
+    /**
+     * @var EntityManagerInterface
+     */
+    protected $em;
+
+    /**
+     * UserController constructor.
+     * @param EntityManagerInterface $em
+     */
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em = $em;
+    }
+
     /**
      * @ApiDoc(
      *    description="Récupère la liste des lieux",
      *    output= { "class"=Place::class, "collection"=true, "groups"={"place"} }
      * )
+     *
+     * @param Request $request
+     * @return array
+     *
      * @Rest\View(serializerGroups={"place"})
      * @Rest\Get("/places")
      */
     public function getPlacesAction(Request $request)
     {
-        $em = $this->getEm();
-        $places = $em->getRepository('AppBundle:Place')
+        $places = $this->em->getRepository('AppBundle:Place')
                      ->findAll();
-        /* @var $places Place[] */
 
         return $places;
     }
@@ -37,15 +52,16 @@ class PlaceController extends Controller
      *    output= { "class"=Place::class, "collection"=true, "groups"={"place"} }
      * )
      *
+     * @param Request $request
+     * @return object|void|null
+     *
      * @Rest\View(serializerGroups={"place"})
      * @Rest\Get("/places/{id}")
      */
     public function getPlaceAction(Request $request)
     {
-        $em = $this->getEm();
-        $place = $em->getRepository('AppBundle:Place')
-                    ->find($request->get('id'));
-        /* @var $place Place */
+        $place = $this->em->getRepository('AppBundle:Place')
+                          ->find($request->get('id'));
 
         if (empty($place)) {
             return $this->placeNotFound();
@@ -69,6 +85,9 @@ class PlaceController extends Controller
      *    }
      * )
      *
+     * @param Request $request
+     * @return Place|\Symfony\Component\Form\FormInterface
+     *
      * @Rest\View(statusCode=Response::HTTP_CREATED, serializerGroups={"place"})
      * @Rest\Post("/places")
      */
@@ -81,8 +100,8 @@ class PlaceController extends Controller
 
         if ($form->isValid()) {
 
-            $em = $this->getEm();
-            $em->persist($place)->flush();
+            $this->em->persist($place);
+            $this->em->flush();
 
             return $place;
         } else {
@@ -104,25 +123,27 @@ class PlaceController extends Controller
      *    }
      * )
      *
+     * @param Request $request
+     * @return array
+     *
      * @Rest\View(statusCode=Response::HTTP_NO_CONTENT, serializerGroups={"place"})
      * @Rest\Delete("/places/{id}")
      */
     public function removePlaceAction(Request $request)
     {
-        $em = $this->getEm();
-        $place = $em->getRepository('AppBundle:Place')
-                    ->find($request->get('id'));
-        /* @var $place Place */
+        $place = $this->em->getRepository('AppBundle:Place')
+                          ->find($request->get('id'));
 
         if (!$place) {
             return $this->placeNotFound();
         }
 
         foreach ($place->getPrices() as $price) {
-            $em->remove($price);
+            $this->em->remove($price);
         }
-        $em->remove($place);
-        $em->flush();
+
+        $this->em->remove($place);
+        $this->em->flush();
     }
 
     /**
@@ -139,6 +160,9 @@ class PlaceController extends Controller
      *    }
      * )
      *
+     * @param Request $request
+     * @return object|\Symfony\Component\Form\FormInterface|void|null
+     *
      * @Rest\View(serializerGroups={"place"})
      * @Rest\Patch("/places/{id}")
      */
@@ -147,11 +171,15 @@ class PlaceController extends Controller
         return $this->updatePlace($request, false);
     }
 
+    /**
+     * @param Request $request
+     * @param $clearMissing
+     * @return object|\Symfony\Component\Form\FormInterface|void|null
+     */
     private function updatePlace(Request $request, $clearMissing)
     {
-        $em = $this->getEm();
-        $place = $em->getRepository('AppBundle:Place')
-                    ->find($request->get('id'));
+        $place = $this->em->getRepository('AppBundle:Place')
+                          ->find($request->get('id'));
 
         if (empty($place)) {
             return $this->placeNotFound();
@@ -163,8 +191,8 @@ class PlaceController extends Controller
 
         if ($form->isValid()) {
 
-            $em = $this->getEm();
-            $em->persist($place)->flush();
+            $this->em->persist($place);
+            $this->em->flush();
 
             return $place;
         } else {
@@ -175,10 +203,5 @@ class PlaceController extends Controller
     private function placeNotFound()
     {
         throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException('Place not found');
-    }
-
-    private function getEm()
-    {
-        return $this->get('doctrine.orm.entity_manager');
     }
 }

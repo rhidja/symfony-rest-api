@@ -1,23 +1,46 @@
 <?php
-# src/UserBundle/Controller/AuthTokenController.php
 namespace UserBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
-use FOS\RestBundle\Controller\Annotations as Rest; // alias pour toutes les annotations
+use FOS\RestBundle\Controller\Annotations as Rest;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use UserBundle\Form\Type\CredentialsType;
 use UserBundle\Entity\AuthToken;
 use UserBundle\Entity\Credentials;
 
-class AuthTokenController extends Controller
+/**
+ * Class AuthTokenController
+ * @package UserBundle\Controller
+ */
+class AuthTokenController extends AbstractController
 {
     /**
+     * @var EntityManagerInterface
+     */
+    protected $em;
+
+    /**
+     * AuthTokenController constructor.
+     * @param EntityManagerInterface $em
+     */
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em = $em;
+    }
+
+    /**
+     * @param Request $request
+     * @param UserPasswordEncoderInterface $encoder
+     * @return \FOS\RestBundle\View\View|\Symfony\Component\Form\FormInterface|AuthToken
+     * @throws \Exception
+     *
      * @Rest\View(statusCode=Response::HTTP_CREATED, serializerGroups={"auth-token"})
      * @Rest\Post("/auth-tokens")
      */
-    public function postAuthTokensAction(Request $request)
+    public function postAuthTokensAction(Request $request, UserPasswordEncoderInterface $encoder)
     {
         $credentials = new Credentials();
         $form = $this->createForm(CredentialsType::class, $credentials);
@@ -28,16 +51,12 @@ class AuthTokenController extends Controller
             return $form;
         }
 
-        $em = $this->get('doctrine.orm.entity_manager');
-
-        $user = $em->getRepository('UserBundle:User')
-            ->findOneByUsername($credentials->getUsername());
+        $user = $this->em->getRepository('UserBundle:User')->findOneByUsername($credentials->getUsername());
 
         if (!$user) { // L'utilisateur n'existe pas
             return $this->invalidCredentials();
         }
 
-        $encoder = $this->get('security.password_encoder');
         $isPasswordValid = $encoder->isPasswordValid($user, $credentials->getPassword());
 
         if (!$isPasswordValid) { // Le mot de passe n'est pas correct
@@ -49,28 +68,27 @@ class AuthTokenController extends Controller
         $authToken->setCreatedAt(new \DateTime('now'));
         $authToken->setUser($user);
 
-        $em->persist($authToken);
-        $em->flush();
+        $this->em->persist($authToken);
+        $this->em->flush();
 
         return $authToken;
     }
 
     /**
+     * @param Request $request
+     *
      * @Rest\View(statusCode=Response::HTTP_NO_CONTENT)
      * @Rest\Delete("/auth-tokens/{id}")
      */
     public function removeAuthTokenAction(Request $request)
     {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $authToken = $em->getRepository('UserBundle:AuthToken')
-                    ->find($request->get('id'));
-        /* @var $authToken AuthToken */
+        $authToken = $this->em->getRepository('UserBundle:AuthToken')->find($request->get('id'));
 
         $connectedUser = $this->get('security.token_storage')->getToken()->getUser();
 
         if ($authToken && $authToken->getUser()->getId() === $connectedUser->getId()) {
-            $em->remove($authToken);
-            $em->flush();
+            $this->em->remove($authToken);
+            $this->em->flush();
         } else {
             throw new \Symfony\Component\HttpKernel\Exception\BadRequestHttpException();
         }
