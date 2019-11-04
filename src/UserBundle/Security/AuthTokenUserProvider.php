@@ -1,43 +1,39 @@
 <?php
-# src/UserBundle/Security/AuthTokenUserProvider.php
 
 namespace UserBundle\Security;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
-use Symfony\Component\Security\Core\User\User;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
-use Doctrine\ORM\EntityRepository;
+use UserBundle\Entity\User;
 
 class AuthTokenUserProvider implements UserProviderInterface
 {
-    protected $authTokenRepository;
-    protected $userRepository;
+    protected $em;
 
-    public function __construct(EntityRepository $authTokenRepository, EntityRepository $userRepository)
+    public function __construct(EntityManagerInterface $em)
     {
-        $this->authTokenRepository = $authTokenRepository;
-        $this->userRepository = $userRepository;
+        $this->em = $em;
     }
 
     public function getAuthToken($authTokenHeader)
     {
-        return $this->authTokenRepository->findOneByValue($authTokenHeader);
+        return $this->em->getRepository('UserBundle:AuthToken')->findOneByValue($authTokenHeader);
     }
 
     public function loadUserByUsername($email)
     {
-        return $this->userRepository->findByEmail($email);
+        return $this->em->getRepository('UserBundle:User')->findByEmail($email);
     }
 
     public function refreshUser(UserInterface $user)
     {
-        // Le systéme d'authentification est stateless, on ne doit donc jamais appeler la méthode refreshUser
         throw new UnsupportedUserException();
     }
 
     public function supportsClass($class)
     {
-        return 'UserBundle\Entity\User' === $class;
+        return User::class === $class;
     }
 }

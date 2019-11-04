@@ -1,8 +1,3 @@
-app:
-    resource: "@AppBundle/Controller/DefaultController.php"
-    type: annotation
-    prefix: /
-
 user:
     resource: "@UserBundle/Controller/"
     type:     annotation
