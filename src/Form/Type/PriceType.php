@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Form\Type;
+namespace App\Form\Type;
 
 use App\Entity\Price;
 use Symfony\Component\Form\AbstractType;
