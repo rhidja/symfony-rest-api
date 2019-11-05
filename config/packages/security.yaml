@@ -12,8 +12,8 @@ security:
 
     # http://symfony.com/doc/current/security.html#b-configuring-how-users-are-loaded
     providers:
-        #auth_token_user_provider:
-            #id: UserBundle\Security\AuthTokenUserProvider
+        auth_token_user_provider:
+            id: App\Security\AuthTokenUserProvider
         fos_userbundle:
             id: fos_user.user_provider.username
 
@@ -31,14 +31,15 @@ security:
             pattern: ^/api/auth-tokens$
             security: false
 
-        #api:
-        #    pattern: ^/api
-        #    stateless: true
-        #    simple_preauth:
-        #        authenticator: UserBundle\Security\AuthTokenAuthenticator
-        #    provider: auth_token_user_provider
-        #    anonymous: ~
-            # activate different ways to authenticate
+        api:
+            pattern: ^/api
+            stateless: true
+            guard:
+                authenticators:
+                    - App\Security\AuthTokenAuthenticator
+                provider: auth_token_user_provider
+            #anonymous: ~
+           # activate different ways to authenticate
 
         main:
             pattern: ^/
