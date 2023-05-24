@@ -35,7 +35,7 @@ class PlaceController extends AbstractController
      */
     public function getPlacesAction(Request $request)
     {
-        $places = $this->em->getRepository('App:Place')
+        $places = $this->em->getRepository(Place::class)
                            ->findAll();
 
         return $places;
@@ -50,7 +50,7 @@ class PlaceController extends AbstractController
      */
     public function getPlaceAction(Request $request)
     {
-        $place = $this->em->getRepository('App:Place')
+        $place = $this->em->getRepository(Place::class)
                           ->find($request->get('id'));
 
         if (empty($place)) {
@@ -94,7 +94,7 @@ class PlaceController extends AbstractController
      */
     public function removePlaceAction(Request $request)
     {
-        $place = $this->em->getRepository('App:Place')
+        $place = $this->em->getRepository(Place::class)
                           ->find($request->get('id'));
 
         if (!$place) {
@@ -128,7 +128,7 @@ class PlaceController extends AbstractController
      */
     private function updatePlace(Request $request, $clearMissing)
     {
-        $place = $this->em->getRepository('App:Place')
+        $place = $this->em->getRepository(Place::class)
                           ->find($request->get('id'));
 
         if (empty($place)) {

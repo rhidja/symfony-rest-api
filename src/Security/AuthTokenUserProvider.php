@@ -2,6 +2,7 @@
 
 namespace App\Security;
 
+use App\Entity\AuthToken;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -19,12 +20,12 @@ class AuthTokenUserProvider implements UserProviderInterface
 
     public function getAuthToken($authTokenHeader)
     {
-        return $this->em->getRepository('App:AuthToken')->findOneByValue($authTokenHeader);
+        return $this->em->getRepository(AuthToken::class)->findOneByValue($authTokenHeader);
     }
 
     public function loadUserByUsername($email)
     {
-        return $this->em->getRepository('App:User')->findByEmail($email);
+        return $this->em->getRepository(User::class)->findByEmail($email);
     }
 
     public function refreshUser(UserInterface $user)

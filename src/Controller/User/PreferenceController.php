@@ -42,7 +42,7 @@ class PreferenceController extends AbstractController
             return $this->userNotFound();
         }
 
-        $preferences = $this->em->getRepository('App:Preference')
+        $preferences = $this->em->getRepository(Preference::class)
                                 ->findByUser($user);
 
         return $preferences;

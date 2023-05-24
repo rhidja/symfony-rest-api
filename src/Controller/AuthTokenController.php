@@ -1,6 +1,7 @@
 <?php
 namespace App\Controller;
 
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -51,7 +52,7 @@ class AuthTokenController extends AbstractController
             return $form;
         }
 
-        $user = $this->em->getRepository('App:User')->findOneByUsername($credentials->getUsername());
+        $user = $this->em->getRepository(User::class)->findOneByUsername($credentials->getUsername());
 
         if (!$user) { // L'utilisateur n'existe pas
             return $this->invalidCredentials();
@@ -82,7 +83,7 @@ class AuthTokenController extends AbstractController
      */
     public function removeAuthTokenAction(Request $request)
     {
-        $authToken = $this->em->getRepository('App:AuthToken')->find($request->get('id'));
+        $authToken = $this->em->getRepository(AuthToken::class)->find($request->get('id'));
 
         $connectedUser = $this->get('security.token_storage')->getToken()->getUser();
 

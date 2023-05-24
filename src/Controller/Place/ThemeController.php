@@ -2,6 +2,7 @@
 
 namespace App\Controller\Place;
 
+use App\Entity\Place;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -35,7 +36,7 @@ class ThemeController extends AbstractController
      */
     public function getThemesAction(Request $request)
     {
-        $place = $this->em->getRepository('App:Place')
+        $place = $this->em->getRepository(Place::class)
                           ->find($request->get('id'));
 
         if (empty($place)) {
@@ -55,7 +56,7 @@ class ThemeController extends AbstractController
      */
     public function postThemesAction(Request $request)
     {
-        $place = $this->em->getRepository('App:Place')
+        $place = $this->em->getRepository(Place::class)
                           ->find($request->get('id'));
 
         if (empty($place)) {

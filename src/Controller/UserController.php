@@ -35,7 +35,7 @@ class UserController extends AbstractController
      */
     public function getUsersAction(Request $request)
     {
-        $users = $this->em->getRepository('App:User')
+        $users = $this->em->getRepository(User::class)
                     ->findAll();
 
         return $users;
@@ -50,7 +50,7 @@ class UserController extends AbstractController
      */
     public function getUserAction(Request $request)
     {
-        $user = $this->em->getRepository('App:User')
+        $user = $this->em->getRepository(User::class)
                          ->find($request->get('user_id'));
 
         if (empty($user)) {
@@ -96,7 +96,7 @@ class UserController extends AbstractController
      */
     public function removeUserAction(Request $request)
     {
-        $user = $this->em->getRepository('App:User')
+        $user = $this->em->getRepository(User::class)
                    ->find($request->get('id'));
 
         if ($user) {
@@ -140,7 +140,7 @@ class UserController extends AbstractController
      */
     private function updateUser(Request $request, UserPasswordEncoderInterface $encoder, $clearMissing)
     {
-        $user = $this->em->getRepository('App:User')->find($request->get('id'));
+        $user = $this->em->getRepository(User::class)->find($request->get('id'));
 
         if (empty($user)) {
             return $this->userNotFound();
@@ -179,7 +179,7 @@ class UserController extends AbstractController
      */
     public function getUserSuggestionsAction(Request $request)
     {
-        $user = $this->em->getRepository('App:User')->find($request->get('id'));
+        $user = $this->em->getRepository(User::class)->find($request->get('id'));
 
         if (empty($user)) {
             return $this->userNotFound();
