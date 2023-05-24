@@ -38,7 +38,7 @@ class Preference
     protected $value;
 
     /**
-     * @ORM\ManyToOne(targetEntity="UserBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User")
      * @var User
      * @Groups({"preference"})
      */

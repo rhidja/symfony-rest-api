@@ -16,3 +16,8 @@
 /web/bundles/
 /.idea/
 .env
+
+###> phpunit/phpunit ###
+/phpunit.xml
+.phpunit.result.cache
+###< phpunit/phpunit ###
