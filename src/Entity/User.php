@@ -2,130 +2,73 @@
 
 namespace App\Entity;
 
-use FOS\UserBundle\Model\User as BaseUser;
 use Doctrine\ORM\Mapping as ORM;
+use FOS\UserBundle\Model\User as BaseUser;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="user")
- */
+#[ORM\Table(name: 'user')]
+#[ORM\Entity]
 class User extends BaseUser
 {
-    /**
-     * Identifiant unique d'un utilisateur
-     *
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"users", "auth-token"})
-     */
+    #[Groups(['users', 'auth-token'])]
+    #[ORM\Id]
+    #[ORM\Column]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     protected $id;
 
     /**
-     * Le nom d'un utilisateur
-     *
-	 * @var string
-	 *
-	 * @ORM\Column(name="firstname", type="string", length=32, nullable=true)
-     * @Groups({"users", "auth-token"})
-	 */
-	protected $firstname;
-
-	/**
-     * Le prénom d'un utilisateur
-     *
-	 * @var string
-	 *
-	 * @ORM\Column(name="lastname", type="string", length=32, nullable=true)
-     * @Groups({"users", "auth-token"})
-	 */
-	protected $lastname;
-
-	/**
-     * Le numéro de téléphone d'un utilisateur
-     *
-	 * @var string
-	 *
-	 * @ORM\Column(name="mobile", type="string", length=16, nullable=true)
-     * @Groups({"users", "auth-token"})
-	 */
-	protected $mobile;
-
-    public function __construct()
-    {
-        parent::__construct();
-        // your own logic
-    }
+     * Le nom d'un utilisateur.
+     */
+    #[Groups(['users', 'auth-token'])]
+    #[ORM\Column(length: 32, nullable: true)]
+    protected ?string $firstname = null;
 
     /**
-     * Set firstname
-     *
-     * @param string $firstname
-     *
-     * @return User
+     * Le prénom d'un utilisateur.
      */
-    public function setFirstname($firstname)
+    #[Groups(['users', 'auth-token'])]
+    #[ORM\Column(length: 32, nullable: true)]
+    protected ?string $lastname = null;
+
+    /**
+     * Le numéro de téléphone d'un utilisateur.
+     */
+    #[Groups(['users', 'auth-token'])]
+    #[ORM\Column(length: 16, nullable: true)]
+    protected ?string $mobile = null;
+
+    public function setFirstname(?string $firstname): self
     {
         $this->firstname = $firstname;
 
         return $this;
     }
 
-    /**
-     * Get firstname
-     *
-     * @return string
-     */
-    public function getFirstname()
+    public function getFirstname(): ?string
     {
         return $this->firstname;
     }
 
-    /**
-     * Set lastname
-     *
-     * @param string $lastname
-     *
-     * @return User
-     */
-    public function setLastname($lastname)
+    public function setLastname(?string $lastname): self
     {
         $this->lastname = $lastname;
 
         return $this;
     }
 
-    /**
-     * Get lastname
-     *
-     * @return string
-     */
-    public function getLastname()
+    public function getLastname(): ?string
     {
         return $this->lastname;
     }
 
-    /**
-     * Set mobile
-     *
-     * @param string $mobile
-     *
-     * @return User
-     */
-    public function setMobile($mobile)
+    public function setMobile(?string $mobile): self
     {
         $this->mobile = $mobile;
 
         return $this;
     }
 
-    /**
-     * Get mobile
-     *
-     * @return string
-     */
-    public function getMobile()
+    public function getMobile(): ?string
     {
         return $this->mobile;
     }

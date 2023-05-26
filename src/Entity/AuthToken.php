@@ -1,80 +1,79 @@
 <?php
+
+declare(strict_types=1);
+
 namespace App\Entity;
 
+use App\Repository\AuthTokenRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-/**
- * @ORM\Entity()
- * @ORM\Table(name="auth_tokens", uniqueConstraints={@ORM\UniqueConstraint(name="auth_tokens_value_unique", columns={"value"})})
- */
+#[ORM\Table(name: 'auth_token')]
+#[ORM\UniqueConstraint(name: 'auth_token_value_unique', columns: ['value'])]
+#[ORM\Entity(repositoryClass: AuthTokenRepository::class)]
 class AuthToken
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue
-     * @Groups({"auth-token"})
-     */
-    protected $id;
+    #[Groups(['auth-token'])]
+    #[ORM\Id]
+    #[ORM\Column]
+    #[ORM\GeneratedValue]
+    protected ?int $id = null;
 
-    /**
-     * @ORM\Column(type="string")
-     * @Groups({"auth-token"})
-     */
-    protected $value;
+    #[Groups(['auth-token'])]
+    #[ORM\Column]
+    protected ?string $value = null;
 
-    /**
-     * @ORM\Column(type="datetime")
-     * @var \DateTime
-     * @Groups({"auth-token"})
-     */
-    protected $createdAt;
+    #[Groups(['auth-token'])]
+    #[ORM\Column]
+    protected \DateTimeImmutable $createdAt;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="User")
-     * @var User
-     * @Groups({"auth-token"})
-     */
-    protected $user;
+    #[Groups(['auth-token'])]
+    #[ORM\ManyToOne]
+    protected ?User $user = null;
 
-    public function getId()
+    public function __construct()
+    {
+        $this->createdAt = new \DateTimeImmutable();
+    }
+
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
-
-    public function getValue()
+    public function getValue(): ?string
     {
         return $this->value;
     }
 
-    public function setValue($value)
+    public function setValue(string $value): self
     {
         $this->value = $value;
+
+        return $this;
     }
 
-    public function getCreatedAt()
+    public function getCreatedAt(): \DateTimeImmutable
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTime $createdAt)
+    public function setCreatedAt(\DateTimeImmutable $createdAt): self
     {
         $this->createdAt = $createdAt;
+
+        return $this;
     }
 
-    public function getUser()
+    public function getUser(): ?User
     {
         return $this->user;
     }
 
-    public function setUser(User $user)
+    public function setUser(User $user): self
     {
         $this->user = $user;
+
+        return $this;
     }
 }

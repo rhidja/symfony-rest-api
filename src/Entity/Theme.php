@@ -1,88 +1,80 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
+use App\Repository\ThemeRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-/**
- * @ORM\Entity()
- * @ORM\Table(name="themes",
- *      uniqueConstraints={@ORM\UniqueConstraint(name="themes_name_place_unique", columns={"name", "place_id"})}
- * )
- */
+#[ORM\Table(name: 'theme')]
+#[ORM\UniqueConstraint(name: 'themes_name_place_unique', columns: ['name', 'place_id'])]
+#[ORM\Entity(repositoryClass: ThemeRepository::class)]
 class Theme
 {
-    /**
-     * L'identifiant unique d'un thème
-     *
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @Groups({"place", "theme"})
-     * @ORM\GeneratedValue
-     */
-    protected $id;
+    #[Groups(['place', 'theme'])]
+    #[ORM\Id]
+    #[ORM\Column]
+    #[ORM\GeneratedValue]
+    protected ?int $id = null;
 
     /**
-     * Le nom d'un thème
-     *
-     * @ORM\Column(type="string")
-     * @Groups({"place", "theme"})
+     * Le nom d'un thème.
      */
-    protected $name;
+    #[Groups(['place', 'theme'])]
+    #[ORM\Column]
+    protected ?string $name = null;
 
     /**
-     * La valeur d'un thème
-     *
-     * @ORM\Column(type="integer")
-     * @Groups({"place", "theme"})
+     * La valeur d'un thème.
      */
-    protected $value;
+    #[Groups(['place', 'theme'])]
+    #[ORM\Column]
+    protected ?int $value = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Place", inversedBy="themes")
-     * @Groups({"theme"})
-     * @var Place
-     */
-    protected $place;
+    #[Groups(['theme'])]
+    #[ORM\ManyToOne(inversedBy: 'themes')]
+    protected ?Place $place = null;
 
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
-
-    public function getName()
+    public function getName(): ?string
     {
         return $this->name;
     }
 
-    public function setName($name)
+    public function setName($name): self
     {
         $this->name = $name;
+
+        return $this;
     }
 
-    public function getValue()
+    public function getValue(): ?int
     {
         return $this->value;
     }
 
-    public function setValue($value)
+    public function setValue($value): self
     {
         $this->value = $value;
+
+        return $this;
     }
 
-    public function getPlace()
+    public function getPlace(): ?Place
     {
         return $this->place;
     }
 
-    public function setPlace(Place $place)
+    public function setPlace(Place $place): self
     {
         $this->place = $place;
+
+        return $this;
     }
 }
