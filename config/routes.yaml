@@ -1,7 +1,3 @@
-#index:
-#    path: /
-#    controller: App\Controller\DefaultController::index
-
 places:
     type:     rest
     resource: App\Controller\PlaceController
