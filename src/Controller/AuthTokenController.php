@@ -1,19 +1,20 @@
 <?php
+
 namespace App\Controller;
 
-use App\Entity\User;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Request;
-use FOS\RestBundle\Controller\Annotations as Rest;
-use App\Form\Type\CredentialsType;
 use App\Entity\AuthToken;
-use App\Entity\Credentials;
+use App\Entity\User;
+use App\Form\Type\CredentialsType;
+use App\Model\Credentials;
+use Doctrine\ORM\EntityManagerInterface;
+use FOS\RestBundle\Controller\Annotations as Rest;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 /**
- * Class AuthTokenController
- * @package App\Controller
+ * Class AuthTokenController.
  */
 class AuthTokenController extends AbstractController
 {
@@ -24,7 +25,6 @@ class AuthTokenController extends AbstractController
 
     /**
      * AuthTokenController constructor.
-     * @param EntityManagerInterface $em
      */
     public function __construct(EntityManagerInterface $em)
     {
@@ -32,20 +32,16 @@ class AuthTokenController extends AbstractController
     }
 
     /**
-     * @param Request $request
-     * @param UserPasswordEncoderInterface $encoder
-     * @return \FOS\RestBundle\View\View|\Symfony\Component\Form\FormInterface|AuthToken
-     * @throws \Exception
-     *
      * @Rest\View(statusCode=Response::HTTP_CREATED, serializerGroups={"auth-token"})
+     *
      * @Rest\Post("/auth-tokens")
      */
-    public function postAuthTokensAction(Request $request, UserPasswordEncoderInterface $encoder)
+    public function postAuthTokensAction(Request $request, UserPasswordHasherInterface $passwordHasher)
     {
         $credentials = new Credentials();
         $form = $this->createForm(CredentialsType::class, $credentials);
 
-        $form->submit($request->request->all());
+        $form->handleRequest($request);
 
         if (!$form->isValid()) {
             return $form;
@@ -57,7 +53,7 @@ class AuthTokenController extends AbstractController
             return $this->invalidCredentials();
         }
 
-        $isPasswordValid = $encoder->isPasswordValid($user, $credentials->getPassword());
+        $isPasswordValid = $passwordHasher->isPasswordValid($user, $credentials->getPassword());
 
         if (!$isPasswordValid) { // Le mot de passe n'est pas correct
             return $this->invalidCredentials();
@@ -75,9 +71,8 @@ class AuthTokenController extends AbstractController
     }
 
     /**
-     * @param Request $request
-     *
      * @Rest\View(statusCode=Response::HTTP_NO_CONTENT)
+     *
      * @Rest\Delete("/auth-tokens/{id}")
      */
     public function removeAuthTokenAction(Request $request)

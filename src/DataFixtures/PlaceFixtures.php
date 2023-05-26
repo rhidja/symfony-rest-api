@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\DataFixtures;
@@ -22,8 +23,8 @@ class PlaceFixtures extends Fixture implements DependentFixtureInterface
         $art = $this->getReference('art');
 
         $place = new Place();
-        $place->setName("Tour Eiffel");
-        $place->setAddress("5 Avenue Anatole France, 75007 Paris");
+        $place->setName('Tour Eiffel');
+        $place->setAddress('5 Avenue Anatole France, 75007 Paris');
         $place->addTheme($architecture);
         $place->addTheme($history);
         $manager->persist($place);
@@ -36,8 +37,8 @@ class PlaceFixtures extends Fixture implements DependentFixtureInterface
         $manager->persist($price);
 
         $place = new Place();
-        $place->setName("Mont-Saint-Michel");
-        $place->setAddress("50170 Le Mont-Saint-Michel");
+        $place->setName('Mont-Saint-Michel');
+        $place->setAddress('50170 Le Mont-Saint-Michel');
         $place->addTheme($history);
         $place->addTheme($art);
         $manager->persist($place);

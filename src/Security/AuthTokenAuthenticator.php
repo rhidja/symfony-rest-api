@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Security;
 
 use App\Entity\AuthToken;
@@ -26,7 +27,6 @@ class AuthTokenAuthenticator extends AbstractGuardAuthenticator
 
     /**
      * AuthTokenAuthenticator constructor.
-     * @param HttpUtils $httpUtils
      */
     public function __construct(HttpUtils $httpUtils)
     {
@@ -34,12 +34,11 @@ class AuthTokenAuthenticator extends AbstractGuardAuthenticator
     }
 
     /**
-     * @param Request $request
      * @return bool
      */
     public function supports(Request $request)
     {
-        if(!$request->headers->has('X-AUTH-TOKEN')){
+        if (!$request->headers->has('X-AUTH-TOKEN')) {
             throw new BadCredentialsException('X-Auth-Token header is required');
         }
 
@@ -47,7 +46,6 @@ class AuthTokenAuthenticator extends AbstractGuardAuthenticator
     }
 
     /**
-     * @param Request $request
      * @return array|mixed
      */
     public function getCredentials(Request $request)
@@ -60,12 +58,7 @@ class AuthTokenAuthenticator extends AbstractGuardAuthenticator
     public function getUser($credentials, UserProviderInterface $userProvider)
     {
         if (!$userProvider instanceof AuthTokenUserProvider) {
-            throw new \InvalidArgumentException(
-                sprintf(
-                    'The user provider must be an instance of AuthTokenUserProvider (%s was given).',
-                    get_class($userProvider)
-                )
-            );
+            throw new \InvalidArgumentException(sprintf('The user provider must be an instance of AuthTokenUserProvider (%s was given).', $userProvider::class));
         }
 
         $authTokenHeader = $credentials['authTokenHeader'];
@@ -96,7 +89,7 @@ class AuthTokenAuthenticator extends AbstractGuardAuthenticator
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
         $data = [
-            'message' => strtr($exception->getMessageKey(), $exception->getMessageData())
+            'message' => strtr($exception->getMessageKey(), $exception->getMessageData()),
 
             // or to translate this message
             // $this->translator->trans($exception->getMessageKey(), $exception->getMessageData())
@@ -106,13 +99,13 @@ class AuthTokenAuthenticator extends AbstractGuardAuthenticator
     }
 
     /**
-     * Called when authentication is needed, but it's not sent
+     * Called when authentication is needed, but it's not sent.
      */
     public function start(Request $request, AuthenticationException $authException = null)
     {
         $data = [
             // you might translate this message
-            'message' => 'Authentication Required'
+            'message' => 'Authentication Required',
         ];
 
         return new JsonResponse($data, Response::HTTP_UNAUTHORIZED);

@@ -2,38 +2,28 @@
 
 namespace App\Controller;
 
+use App\Entity\Place;
+use App\Form\Type\PlaceType;
 use Doctrine\ORM\EntityManagerInterface;
+use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use FOS\RestBundle\Controller\Annotations as Rest;
-use App\Form\Type\PlaceType;
-use App\Entity\Place;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class PlaceController extends AbstractController
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    protected $em;
-
-    /**
-     * UserController constructor.
-     * @param EntityManagerInterface $em
-     */
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(private EntityManagerInterface $em)
     {
-        $this->em = $em;
     }
 
     /**
-     * @param Request $request
-     * @return array
-     *
      * @Rest\View(serializerGroups={"place"})
+     *
      * @Rest\Get("/places")
      */
-    public function getPlacesAction(Request $request)
+    public function getPlacesAction()
     {
         $places = $this->em->getRepository(Place::class)
                            ->findAll();
@@ -42,10 +32,10 @@ class PlaceController extends AbstractController
     }
 
     /**
-     * @param Request $request
      * @return object|void|null
      *
      * @Rest\View(serializerGroups={"place"})
+     *
      * @Rest\Get("/places/{id}")
      */
     public function getPlaceAction(Request $request)
@@ -61,13 +51,11 @@ class PlaceController extends AbstractController
     }
 
     /**
-     * @param Request $request
-     * @return Place|\Symfony\Component\Form\FormInterface
-     *
      * @Rest\View(statusCode=Response::HTTP_CREATED, serializerGroups={"place"})
+     *
      * @Rest\Post("/places")
      */
-    public function postPlacesAction(Request $request)
+    public function postPlacesAction(Request $request): Place|FormInterface
     {
         $place = new Place();
         $form = $this->createForm(PlaceType::class, $place);
@@ -75,7 +63,6 @@ class PlaceController extends AbstractController
         $form->submit($request->request->all());
 
         if ($form->isValid()) {
-
             $this->em->persist($place);
             $this->em->flush();
 
@@ -86,10 +73,10 @@ class PlaceController extends AbstractController
     }
 
     /**
-     * @param Request $request
      * @return array
      *
      * @Rest\View(statusCode=Response::HTTP_NO_CONTENT, serializerGroups={"place"})
+     *
      * @Rest\Delete("/places/{id}")
      */
     public function removePlaceAction(Request $request)
@@ -110,10 +97,10 @@ class PlaceController extends AbstractController
     }
 
     /**
-     * @param Request $request
-     * @return object|\Symfony\Component\Form\FormInterface|void|null
+     * @return object|FormInterface|void|null
      *
      * @Rest\View(serializerGroups={"place"})
+     *
      * @Rest\Patch("/places/{id}")
      */
     public function patchPlaceAction(Request $request)
@@ -122,9 +109,7 @@ class PlaceController extends AbstractController
     }
 
     /**
-     * @param Request $request
-     * @param $clearMissing
-     * @return object|\Symfony\Component\Form\FormInterface|void|null
+     * @return object|FormInterface|void|null
      */
     private function updatePlace(Request $request, $clearMissing)
     {
@@ -140,7 +125,6 @@ class PlaceController extends AbstractController
         $form->submit($request->request->all(), $clearMissing);
 
         if ($form->isValid()) {
-
             $this->em->persist($place);
             $this->em->flush();
 
@@ -150,8 +134,8 @@ class PlaceController extends AbstractController
         }
     }
 
-    private function placeNotFound()
+    private function placeNotFound(): never
     {
-        throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException('Place not found');
+        throw new NotFoundHttpException('Place not found');
     }
 }

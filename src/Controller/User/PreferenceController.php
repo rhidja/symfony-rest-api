@@ -2,13 +2,13 @@
 
 namespace App\Controller\User;
 
+use App\Entity\Preference;
+use App\Form\Type\PreferenceType;
 use Doctrine\ORM\EntityManagerInterface;
+use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use FOS\RestBundle\Controller\Annotations as Rest;
-use App\Form\Type\PreferenceType;
-use App\Entity\Preference;
 
 class PreferenceController extends AbstractController
 {
@@ -19,7 +19,6 @@ class PreferenceController extends AbstractController
 
     /**
      * UserController constructor.
-     * @param EntityManagerInterface $em
      */
     public function __construct(EntityManagerInterface $em)
     {
@@ -27,10 +26,10 @@ class PreferenceController extends AbstractController
     }
 
     /**
-     * @param Request $request
      * @return \FOS\RestBundle\View\View
      *
      * @Rest\View(serializerGroups={"preference"})
+     *
      * @Rest\Get("/users/{id}/preferences")
      */
     public function getPreferencesAction(Request $request)
@@ -48,14 +47,12 @@ class PreferenceController extends AbstractController
         return $preferences;
     }
 
-     /**
-      * @param Request $request
-      * @return Preference|\FOS\RestBundle\View\View|\Symfony\Component\Form\FormInterface
-      *
-      * @Rest\View(statusCode=Response::HTTP_CREATED, serializerGroups={"preference"})
-      * @Rest\Post("/users/{id}/preferences")
-      */
-    public function postPreferencesAction(Request $request)
+    /**
+     * @Rest\View(statusCode=Response::HTTP_CREATED, serializerGroups={"preference"})
+     *
+     * @Rest\Post("/users/{id}/preferences")
+     */
+    public function postPreferencesAction(Request $request): \App\Entity\Preference|\FOS\RestBundle\View\View|\Symfony\Component\Form\FormInterface
     {
         $user = $this->em->getRepository('UserBundle:User')
                          ->find($request->get('id'));
@@ -73,6 +70,7 @@ class PreferenceController extends AbstractController
         if ($form->isValid()) {
             $this->em->persist($preference);
             $this->em->flush();
+
             return $preference;
         } else {
             return $form;

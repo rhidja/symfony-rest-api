@@ -3,13 +3,13 @@
 namespace App\Controller\Place;
 
 use App\Entity\Place;
+use App\Entity\Price;
+use App\Form\Type\PriceType;
 use Doctrine\ORM\EntityManagerInterface;
+use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use FOS\RestBundle\Controller\Annotations as Rest;
-use App\Form\Type\PriceType;
-use App\Entity\Price;
 
 class PriceController extends AbstractController
 {
@@ -20,7 +20,6 @@ class PriceController extends AbstractController
 
     /**
      * UserController constructor.
-     * @param EntityManagerInterface $em
      */
     public function __construct(EntityManagerInterface $em)
     {
@@ -28,10 +27,10 @@ class PriceController extends AbstractController
     }
 
     /**
-     * @param Request $request
      * @return \FOS\RestBundle\View\View
      *
      * @Rest\View(serializerGroups={"price"})
+     *
      * @Rest\Get("/places/{id}/prices")
      */
     public function getPricesAction(Request $request)
@@ -47,13 +46,11 @@ class PriceController extends AbstractController
     }
 
     /**
-     * @param Request $request
-     * @return Price|\FOS\RestBundle\View\View|\Symfony\Component\Form\FormInterface
-     *
      * @Rest\View(statusCode=Response::HTTP_CREATED, serializerGroups={"price"})
+     *
      * @Rest\Post("/places/{id}/prices")
      */
-    public function postPricesAction(Request $request)
+    public function postPricesAction(Request $request): \App\Entity\Price|\FOS\RestBundle\View\View|\Symfony\Component\Form\FormInterface
     {
         $place = $this->em->getRepository(Place::class)
                           ->find($request->get('id'));
@@ -71,6 +68,7 @@ class PriceController extends AbstractController
         if ($form->isValid()) {
             $this->em->persist($price);
             $this->em->flush();
+
             return $price;
         } else {
             return $form;

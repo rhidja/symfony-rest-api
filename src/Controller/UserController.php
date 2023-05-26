@@ -1,14 +1,17 @@
 <?php
+
 namespace App\Controller;
 
+use App\Entity\User;
+use App\Form\Type\UserType;
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use App\Form\Type\UserType;
-use App\Entity\User;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserController extends AbstractController
 {
@@ -19,7 +22,6 @@ class UserController extends AbstractController
 
     /**
      * UserController constructor.
-     * @param EntityManagerInterface $em
      */
     public function __construct(EntityManagerInterface $em)
     {
@@ -27,13 +29,13 @@ class UserController extends AbstractController
     }
 
     /**
-     * @param Request $request
      * @return array
      *
      * @Rest\View(serializerGroups={"users"})
+     *
      * @Rest\Get("/users")
      */
-    public function getUsersAction(Request $request)
+    public function getUsersAction()
     {
         $users = $this->em->getRepository(User::class)
                     ->findAll();
@@ -42,10 +44,10 @@ class UserController extends AbstractController
     }
 
     /**
-     * @param Request $request
      * @return object|void|null
      *
      * @Rest\View(serializerGroups={"users"})
+     *
      * @Rest\Get("/users/{user_id}")
      */
     public function getUserAction(Request $request)
@@ -61,26 +63,27 @@ class UserController extends AbstractController
     }
 
     /**
-     * @param Request $request
-     * @param UserPasswordEncoderInterface $encoder
-     * @return \Symfony\Component\Form\FormInterface|User
-     *
      * @Rest\View(statusCode=Response::HTTP_CREATED, serializerGroups={"users"})
+     *
      * @Rest\Post("/users")
      */
-    public function postUsersAction(Request $request, UserPasswordEncoderInterface $encoder)
+    public function postUsersAction(Request $request, UserPasswordHasherInterface $userPasswordHasher): FormInterface|User
     {
         $user = new User();
-        $form = $this->createForm(UserType::class, $user, ['validation_groups'=>['Default', 'New']]);
+        $form = $this->createForm(UserType::class, $user, ['validation_groups' => ['Default', 'New']]);
 
         $form->submit($request->request->all());
 
         if ($form->isValid()) {
-            $encoded = $encoder->encodePassword($user, $user->getPlainPassword());
+            $encoded = $userPasswordHasher->hashPassword(
+                $user,
+                $user->getPlainPassword()
+            );
             $user->setPassword($encoded);
 
             $this->em->persist($user);
             $this->em->flush();
+
             return $user;
         } else {
             return $form;
@@ -88,10 +91,8 @@ class UserController extends AbstractController
     }
 
     /**
-     *
-     * @param Request $request
-     *
      * @Rest\View(statusCode=Response::HTTP_NO_CONTENT, serializerGroups={"users"})
+     *
      * @Rest\Delete("/users/{id}")
      */
     public function removeUserAction(Request $request)
@@ -106,39 +107,33 @@ class UserController extends AbstractController
     }
 
     /**
-     * @param Request $request
-     * @param UserPasswordEncoderInterface $encoder
-     * @return object|\Symfony\Component\Form\FormInterface|void|null
+     * @return object|FormInterface|void|null
      *
      * @Rest\View(serializerGroups={"users"})
+     *
      * @Rest\Put("/users/{id}")
      */
-    public function updateUserAction(Request $request, UserPasswordEncoderInterface $encoder)
+    public function updateUserAction(Request $request, UserPasswordHasherInterface $encoder)
     {
-        return $this->updateUser($request, $encoder,true);
+        return $this->updateUser($request, $encoder, true);
     }
 
     /**
-     *
-     * @param Request $request
-     * @param UserPasswordEncoderInterface $encoder
-     * @return object|\Symfony\Component\Form\FormInterface|void|null
+     * @return object|FormInterface|void|null
      *
      * @Rest\View(serializerGroups={"users"})
+     *
      * @Rest\Patch("/users/{id}")
      */
-    public function patchUserAction(Request $request, UserPasswordEncoderInterface $encoder)
+    public function patchUserAction(Request $request, UserPasswordHasherInterface $encoder)
     {
         return $this->updateUser($request, $encoder, false);
     }
 
     /**
-     * @param Request $request
-     * @param UserPasswordEncoderInterface $encoder
-     * @param $clearMissing
-     * @return object|\Symfony\Component\Form\FormInterface|void|null
+     * @return object|FormInterface|void|null
      */
-    private function updateUser(Request $request, UserPasswordEncoderInterface $encoder, $clearMissing)
+    private function updateUser(Request $request, UserPasswordHasherInterface $encoder, $clearMissing)
     {
         $user = $this->em->getRepository(User::class)->find($request->get('id'));
 
@@ -147,7 +142,7 @@ class UserController extends AbstractController
         }
 
         if ($clearMissing) {
-            $options = ['validation_groups'=>['Default', 'FullUpdate']];
+            $options = ['validation_groups' => ['Default', 'FullUpdate']];
         } else {
             $options = [];
         }
@@ -159,11 +154,12 @@ class UserController extends AbstractController
         if ($form->isValid()) {
             // Si l'utilisateur veut changer son mot de passe
             if (!empty($user->getPlainPassword())) {
-                $encoded = $encoder->encodePassword($user, $user->getPlainPassword());
+                $encoded = $encoder->hashPassword($user, $user->getPlainPassword());
                 $user->setPassword($encoded);
             }
             $this->em->merge($user);
             $this->em->flush();
+
             return $user;
         } else {
             return $form;
@@ -171,10 +167,10 @@ class UserController extends AbstractController
     }
 
     /**
-     * @param Request $request
      * @return array|void
      *
      * @Rest\View(serializerGroups={"users"})
+     *
      * @Rest\Get("/users/{id}/suggestions")
      */
     public function getUserSuggestionsAction(Request $request)
@@ -199,8 +195,6 @@ class UserController extends AbstractController
     }
 
     /**
-     * @param $preferences
-     * @param $themes
      * @return bool
      */
     public function preferencesMatch($preferences, $themes)
@@ -217,11 +211,8 @@ class UserController extends AbstractController
         return $matchValue >= User::MATCH_VALUE_THRESHOLD;
     }
 
-    /**
-     *
-     */
-    private function userNotFound()
+    private function userNotFound(): never
     {
-        throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException('User not found');
+        throw new NotFoundHttpException('User not found');
     }
 }
