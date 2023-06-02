@@ -1,16 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Entity\Place;
 use App\Form\Type\PlaceType;
+use App\Repository\PlaceRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class PlaceController extends AbstractController
 {
@@ -18,43 +20,22 @@ class PlaceController extends AbstractController
     {
     }
 
-    /**
-     * @Rest\View(serializerGroups={"place"})
-     *
-     * @Rest\Get("/places")
-     */
-    public function getPlacesAction()
+    #[Rest\View(serializerGroups: ["place"])]
+    #[Rest\Get("/places")]
+    public function getPlacesAction(PlaceRepository $placeRepository)
     {
-        $places = $this->em->getRepository(Place::class)
-                           ->findAll();
-
-        return $places;
+        return $placeRepository->findAll();
     }
 
-    /**
-     * @return object|void|null
-     *
-     * @Rest\View(serializerGroups={"place"})
-     *
-     * @Rest\Get("/places/{id}")
-     */
-    public function getPlaceAction(Request $request)
+    #[Rest\View(serializerGroups: ["place"])]
+    #[Rest\Get("/places/{id}")]
+    public function getPlaceAction(Place $place)
     {
-        $place = $this->em->getRepository(Place::class)
-                          ->find($request->get('id'));
-
-        if (empty($place)) {
-            return $this->placeNotFound();
-        }
-
         return $place;
     }
 
-    /**
-     * @Rest\View(statusCode=Response::HTTP_CREATED, serializerGroups={"place"})
-     *
-     * @Rest\Post("/places")
-     */
+    #[Rest\View(statusCode: Response::HTTP_CREATED, serializerGroups: ["place"])]
+    #[Rest\Post("/places")]
     public function postPlacesAction(Request $request): Place|FormInterface
     {
         $place = new Place();
@@ -72,22 +53,10 @@ class PlaceController extends AbstractController
         }
     }
 
-    /**
-     * @return array
-     *
-     * @Rest\View(statusCode=Response::HTTP_NO_CONTENT, serializerGroups={"place"})
-     *
-     * @Rest\Delete("/places/{id}")
-     */
-    public function removePlaceAction(Request $request)
+    #[Rest\View(statusCode: Response::HTTP_NO_CONTENT, serializerGroups: ["place"])]
+    #[Rest\Delete("/places/{id}")]
+    public function removePlaceAction(Place $place)
     {
-        $place = $this->em->getRepository(Place::class)
-                          ->find($request->get('id'));
-
-        if (!$place) {
-            return $this->placeNotFound();
-        }
-
         foreach ($place->getPrices() as $price) {
             $this->em->remove($price);
         }
@@ -96,30 +65,15 @@ class PlaceController extends AbstractController
         $this->em->flush();
     }
 
-    /**
-     * @return object|FormInterface|void|null
-     *
-     * @Rest\View(serializerGroups={"place"})
-     *
-     * @Rest\Patch("/places/{id}")
-     */
-    public function patchPlaceAction(Request $request)
+     #[Rest\View(serializerGroups: ["place"])]
+     #[Rest\Patch("/places/{id}")]
+    public function patchPlaceAction(Request $request, Place $place)
     {
-        return $this->updatePlace($request, false);
+        return $this->updatePlace($request, $place, false);
     }
 
-    /**
-     * @return object|FormInterface|void|null
-     */
-    private function updatePlace(Request $request, $clearMissing)
+    private function updatePlace(Request $request, Place $place, $clearMissing)
     {
-        $place = $this->em->getRepository(Place::class)
-                          ->find($request->get('id'));
-
-        if (empty($place)) {
-            return $this->placeNotFound();
-        }
-
         $form = $this->createForm(PlaceType::class, $place);
 
         $form->submit($request->request->all(), $clearMissing);
@@ -132,10 +86,5 @@ class PlaceController extends AbstractController
         } else {
             return $form;
         }
-    }
-
-    private function placeNotFound(): never
-    {
-        throw new NotFoundHttpException('Place not found');
     }
 }

@@ -1,9 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
+use App\Entity\Place;
+use App\Entity\Preference;
 use App\Entity\User;
 use App\Form\Type\UserType;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -12,61 +17,36 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class UserController extends AbstractController
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    protected $em;
-
-    /**
-     * UserController constructor.
-     */
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(private EntityManagerInterface $em)
     {
-        $this->em = $em;
     }
 
     /**
-     * @return array
-     *
-     * @Rest\View(serializerGroups={"users"})
-     *
-     * @Rest\Get("/users")
+     * @return User[]
      */
-    public function getUsersAction()
+    #[Rest\View(serializerGroups: ["users"])]
+    #[Rest\Get("/users")]
+    public function getUsersAction(UserRepository $userRepository): array
     {
-        $users = $this->em->getRepository(User::class)
-                    ->findAll();
+        /** @var UserInterface[] $users */
+        $users = $userRepository->findAll();
 
         return $users;
     }
 
-    /**
-     * @return object|void|null
-     *
-     * @Rest\View(serializerGroups={"users"})
-     *
-     * @Rest\Get("/users/{user_id}")
-     */
-    public function getUserAction(Request $request)
+    #[Rest\View(serializerGroups: ["users"])]
+    #[Rest\Get("/users/{user_id}")]
+    public function getUserAction(User $user)
     {
-        $user = $this->em->getRepository(User::class)
-                         ->find($request->get('user_id'));
-
-        if (empty($user)) {
-            return $this->userNotFound();
-        }
-
         return $user;
     }
 
-    /**
-     * @Rest\View(statusCode=Response::HTTP_CREATED, serializerGroups={"users"})
-     *
-     * @Rest\Post("/users")
-     */
+    #[Rest\View(statusCode: Response::HTTP_CREATED, serializerGroups: ["users"])]
+    #[Rest\Post("/users")]
     public function postUsersAction(Request $request, UserPasswordHasherInterface $userPasswordHasher): FormInterface|User
     {
         $user = new User();
@@ -90,57 +70,30 @@ class UserController extends AbstractController
         }
     }
 
-    /**
-     * @Rest\View(statusCode=Response::HTTP_NO_CONTENT, serializerGroups={"users"})
-     *
-     * @Rest\Delete("/users/{id}")
-     */
-    public function removeUserAction(Request $request)
+    #[Rest\View(statusCode: Response::HTTP_NO_CONTENT, serializerGroups: ["users"])]
+    #[Rest\Delete("/users/{id}")]
+    public function removeUserAction(User $user)
     {
-        $user = $this->em->getRepository(User::class)
-                   ->find($request->get('id'));
-
-        if ($user) {
-            $this->em->remove($user);
-            $this->em->flush();
-        }
+        $this->em->remove($user);
+        $this->em->flush();
     }
 
-    /**
-     * @return object|FormInterface|void|null
-     *
-     * @Rest\View(serializerGroups={"users"})
-     *
-     * @Rest\Put("/users/{id}")
-     */
-    public function updateUserAction(Request $request, UserPasswordHasherInterface $encoder)
+    #[Rest\View(serializerGroups: ["users"])]
+    #[Rest\Put("/users/{id}")]
+    public function updateUserAction(Request $request, User $user, UserPasswordHasherInterface $passwordHasher)
     {
-        return $this->updateUser($request, $encoder, true);
+        return $this->updateUser($request, $user, $passwordHasher, true);
     }
 
-    /**
-     * @return object|FormInterface|void|null
-     *
-     * @Rest\View(serializerGroups={"users"})
-     *
-     * @Rest\Patch("/users/{id}")
-     */
-    public function patchUserAction(Request $request, UserPasswordHasherInterface $encoder)
+    #[Rest\View(serializerGroups: ["users"])]
+    #[Rest\Patch("/users/{id}")]
+    public function patchUserAction(Request $request, User $user, UserPasswordHasherInterface $passwordHasher)
     {
-        return $this->updateUser($request, $encoder, false);
+        return $this->updateUser($request, $user, $passwordHasher, false);
     }
 
-    /**
-     * @return object|FormInterface|void|null
-     */
-    private function updateUser(Request $request, UserPasswordHasherInterface $encoder, $clearMissing)
+    private function updateUser(Request $request, User $user, UserPasswordHasherInterface $passwordHasher, $clearMissing)
     {
-        $user = $this->em->getRepository(User::class)->find($request->get('id'));
-
-        if (empty($user)) {
-            return $this->userNotFound();
-        }
-
         if ($clearMissing) {
             $options = ['validation_groups' => ['Default', 'FullUpdate']];
         } else {
@@ -154,10 +107,9 @@ class UserController extends AbstractController
         if ($form->isValid()) {
             // Si l'utilisateur veut changer son mot de passe
             if (!empty($user->getPlainPassword())) {
-                $encoded = $encoder->hashPassword($user, $user->getPlainPassword());
-                $user->setPassword($encoded);
+                $password = $passwordHasher->hashPassword($user, $user->getPlainPassword());
+                $user->setPassword($password);
             }
-            $this->em->merge($user);
             $this->em->flush();
 
             return $user;
@@ -166,24 +118,13 @@ class UserController extends AbstractController
         }
     }
 
-    /**
-     * @return array|void
-     *
-     * @Rest\View(serializerGroups={"users"})
-     *
-     * @Rest\Get("/users/{id}/suggestions")
-     */
-    public function getUserSuggestionsAction(Request $request)
+    #[Rest\View(serializerGroups: ["users"])]
+    #[Rest\Get("/users/{id}/suggestions")]
+    public function getUserSuggestionsAction(Request $request, User $user)
     {
-        $user = $this->em->getRepository(User::class)->find($request->get('id'));
-
-        if (empty($user)) {
-            return $this->userNotFound();
-        }
-
         $suggestions = [];
-        $places = $this->em->getRepository('AppBundle:Place')->findAll();
-        $preferences = $this->em->getRepository('AppBundle:Preference')->findByUser($user);
+        $places = $this->em->getRepository(Place::class)->findAll();
+        $preferences = $this->em->getRepository(Preference::class)->findByUser($user);
 
         foreach ($places as $place) {
             if ($this->preferencesMatch($preferences, $place->getThemes())) {
@@ -194,9 +135,6 @@ class UserController extends AbstractController
         return $suggestions;
     }
 
-    /**
-     * @return bool
-     */
     public function preferencesMatch($preferences, $themes)
     {
         $matchValue = 0;

@@ -5,8 +5,8 @@ framework:
     http_method_override: false
     handle_all_throwables: true
 
-    templating:
-        engines: ['twig']
+    #templating:
+    #    engines: ['twig']
 
     serializer:
         enabled: true

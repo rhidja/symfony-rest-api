@@ -1,66 +1,40 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\User;
 
 use App\Entity\Preference;
 use App\Form\Type\PreferenceType;
+use App\Repository\PreferenceRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Controller\Annotations as Rest;
+use FOS\RestBundle\View\View;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class PreferenceController extends AbstractController
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    protected $em;
-
-    /**
-     * UserController constructor.
-     */
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(private EntityManagerInterface $em)
     {
-        $this->em = $em;
     }
 
-    /**
-     * @return \FOS\RestBundle\View\View
-     *
-     * @Rest\View(serializerGroups={"preference"})
-     *
-     * @Rest\Get("/users/{id}/preferences")
-     */
-    public function getPreferencesAction(Request $request)
+    #[Rest\View(serializerGroups: ["preference"])]
+    #[Rest\Get("/users/{id}/preferences")]
+    public function getPreferencesAction(PreferenceRepository $preferenceRepository, UserInterface $user)
     {
-        $user = $this->em->getRepository('UserBundle:User')
-                         ->find($request->get('id'));
-
-        if (empty($user)) {
-            return $this->userNotFound();
-        }
-
-        $preferences = $this->em->getRepository(Preference::class)
-                                ->findByUser($user);
+        $preferences = $preferenceRepository->findByUser($user);
 
         return $preferences;
     }
 
-    /**
-     * @Rest\View(statusCode=Response::HTTP_CREATED, serializerGroups={"preference"})
-     *
-     * @Rest\Post("/users/{id}/preferences")
-     */
-    public function postPreferencesAction(Request $request): \App\Entity\Preference|\FOS\RestBundle\View\View|\Symfony\Component\Form\FormInterface
+    #[Rest\View(statusCode: Response::HTTP_CREATED, serializerGroups: ["preference"])]
+    #[Rest\Post("/users/{id}/preferences")]
+    public function postPreferencesAction(Request $request, UserInterface $user): Preference|View|FormInterface
     {
-        $user = $this->em->getRepository('UserBundle:User')
-                         ->find($request->get('id'));
-
-        if (empty($user)) {
-            return $this->userNotFound();
-        }
-
         $preference = new Preference();
         $preference->setUser($user);
         $form = $this->createForm(PreferenceType::class, $preference);
@@ -75,10 +49,5 @@ class PreferenceController extends AbstractController
         } else {
             return $form;
         }
-    }
-
-    private function userNotFound()
-    {
-        return \FOS\RestBundle\View\View::create(['message' => 'User not found'], Response::HTTP_NOT_FOUND);
     }
 }
