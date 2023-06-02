@@ -1,33 +1,29 @@
-#index:
-#    path: /
-#    controller: App\Controller\DefaultController::index
-
 places:
-    type:     rest
+    type: attribute
     resource: App\Controller\PlaceController
     prefix: /api
 
 prices:
-    type:     rest
+    type: attribute
     resource: App\Controller\Place\PriceController
     prefix: /api
 
 themes:
-    type:     rest
+    type: attribute
     resource: App\Controller\Place\ThemeController
     prefix: /api
 
 users:
-    type:     rest
+    type: attribute
     resource: App\Controller\UserController
     prefix: /api
 
 preferences:
-    type:     rest
+    type: attribute
     resource: App\Controller\User\PreferenceController
     prefix: /api
 
 auth-tokens:
-    type:     rest
+    type: attribute
     resource: App\Controller\AuthTokenController
     prefix: /api

@@ -1,71 +1,35 @@
 <?php
+
+declare(strict_types=1);
+
 namespace App\Controller;
 
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Request;
-use FOS\RestBundle\Controller\Annotations as Rest;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use App\Form\Type\CredentialsType;
 use App\Entity\AuthToken;
-use App\Entity\Credentials;
+use App\Entity\User;
+use Doctrine\ORM\EntityManagerInterface;
+use FOS\RestBundle\Controller\Annotations as Rest;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
-/**
- * Class AuthTokenController
- * @package App\Controller
- */
 class AuthTokenController extends AbstractController
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    protected $em;
-
-    /**
-     * AuthTokenController constructor.
-     * @param EntityManagerInterface $em
-     */
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(private EntityManagerInterface $em)
     {
-        $this->em = $em;
     }
 
-    /**
-     * @param Request $request
-     * @param UserPasswordEncoderInterface $encoder
-     * @return \FOS\RestBundle\View\View|\Symfony\Component\Form\FormInterface|AuthToken
-     * @throws \Exception
-     *
-     * @Rest\View(statusCode=Response::HTTP_CREATED, serializerGroups={"auth-token"})
-     * @Rest\Post("/auth-tokens")
-     */
-    public function postAuthTokensAction(Request $request, UserPasswordEncoderInterface $encoder)
+    #[Rest\View(statusCode: Response::HTTP_CREATED, serializerGroups: ['auth-token'])]
+    #[Rest\Post('/auth-tokens', name: 'api_login')]
+    public function postAuthTokensAction(Security $security): AuthToken
     {
-        $credentials = new Credentials();
-        $form = $this->createForm(CredentialsType::class, $credentials);
-
-        $form->submit($request->request->all());
-
-        if (!$form->isValid()) {
-            return $form;
-        }
-
-        $user = $this->em->getRepository('App:User')->findOneByUsername($credentials->getUsername());
-
-        if (!$user) { // L'utilisateur n'existe pas
-            return $this->invalidCredentials();
-        }
-
-        $isPasswordValid = $encoder->isPasswordValid($user, $credentials->getPassword());
-
-        if (!$isPasswordValid) { // Le mot de passe n'est pas correct
-            return $this->invalidCredentials();
-        }
+        /** @var User $user */
+        $user = $security->getUser();
 
         $authToken = new AuthToken();
         $authToken->setValue(base64_encode(random_bytes(50)));
-        $authToken->setCreatedAt(new \DateTime('now'));
+        $authToken->setCreatedAt(new \DateTimeImmutable('now'));
         $authToken->setUser($user);
 
         $this->em->persist($authToken);
@@ -74,28 +38,22 @@ class AuthTokenController extends AbstractController
         return $authToken;
     }
 
-    /**
-     * @param Request $request
-     *
-     * @Rest\View(statusCode=Response::HTTP_NO_CONTENT)
-     * @Rest\Delete("/auth-tokens/{id}")
-     */
-    public function removeAuthTokenAction(Request $request)
+    #[Rest\View(statusCode: Response::HTTP_NO_CONTENT)]
+    #[Rest\Delete('/auth-tokens/{id}')]
+    public function removeAuthTokenAction(AuthToken $authToken, Security $security): JsonResponse
     {
-        $authToken = $this->em->getRepository('App:AuthToken')->find($request->get('id'));
+        /** @var User $connectedUser */
+        $connectedUser = $security->getUser();
 
-        $connectedUser = $this->get('security.token_storage')->getToken()->getUser();
-
-        if ($authToken && $authToken->getUser()->getId() === $connectedUser->getId()) {
+        if ($authToken->getUser()->getId() === $connectedUser->getId()) {
             $this->em->remove($authToken);
             $this->em->flush();
         } else {
-            throw new \Symfony\Component\HttpKernel\Exception\BadRequestHttpException();
+            throw new BadRequestHttpException();
         }
-    }
 
-    private function invalidCredentials()
-    {
-        return \FOS\RestBundle\View\View::create(['message' => 'Invalid credentials'], Response::HTTP_BAD_REQUEST);
+        return $this->json([
+            'message' => 'Token deleted.',
+        ]);
     }
 }

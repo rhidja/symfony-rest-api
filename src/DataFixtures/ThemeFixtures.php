@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\DataFixtures;
@@ -22,7 +23,6 @@ class ThemeFixtures extends Fixture
         $theme->setValue(6);
         $manager->persist($theme);
         $this->addReference('history', $theme);
-
 
         $theme = new Theme();
         $theme->setName('Art');

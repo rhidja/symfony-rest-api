@@ -1,59 +1,53 @@
 <?php
+
+declare(strict_types=1);
+
 namespace App\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
+use App\Repository\PlaceRepository;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-/**
- * @ORM\Entity()
- * @ORM\Table(name="places", uniqueConstraints={@ORM\UniqueConstraint(name="places_name_unique",columns={"name"})} )
- */
+#[ORM\Table(name: 'place')]
+#[ORM\UniqueConstraint(name: 'places_name_unique', columns: ['name'])]
+#[ORM\Entity(repositoryClass: PlaceRepository::class)]
 class Place
 {
-    /**
-     * Identifiant unique du lieu
-     *
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @Groups({"place", "price", "theme"})
-     * @ORM\GeneratedValue
-     */
-    protected $id;
+    #[Groups(['place', 'price', 'theme'])]
+    #[ORM\Id]
+    #[ORM\Column]
+    #[ORM\GeneratedValue]
+    protected ?int $id = null;
 
     /**
-     * Le nom d'un lieu
-     *
-     * @ORM\Column(type="string")
-     * @Groups({"place", "price", "theme"})
+     * Le nom d'un lieu.
      */
-    protected $name;
+    #[Groups(['place', 'price', 'theme'])]
+    #[ORM\Column]
+    protected ?string $name = null;
 
     /**
-     * L'adresse d'un lieu
-     *
-     * @ORM\Column(type="string")
-     * @Groups({"place", "price", "theme"})
+     * L'adresse d'un lieu.
      */
-    protected $address;
+    #[Groups(['place', 'price', 'theme'])]
+    #[ORM\Column]
+    protected ?string $address = null;
 
     /**
-     * La liste des prix d'un lieu
-     *
-     * @ORM\OneToMany(targetEntity="Price", mappedBy="place", cascade={"persist"})
-     * @Groups({"place"})
-     * @var Price[]
+     * La liste des prix d'un lieu.
      */
-    protected $prices;
+    #[Groups(['place'])]
+    #[ORM\OneToMany(mappedBy: 'place', targetEntity: 'Price', cascade: ['persist'])]
+    protected Collection $prices;
 
     /**
-     * La liste des thèmes d'un lieu
-     *
-     * @ORM\OneToMany(targetEntity="Theme", mappedBy="place", cascade={"persist"})
-     * @Groups({"place"})
-     * @var Theme[]
+     * La liste des thèmes d'un lieu.
      */
-    protected $themes;
+    #[Groups(['place'])]
+    #[ORM\OneToMany(mappedBy: 'place', targetEntity: 'Theme', cascade: ['persist'])]
+    protected Collection $themes;
 
     public function __construct()
     {
@@ -61,47 +55,39 @@ class Place
         $this->themes = new ArrayCollection();
     }
 
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getName()
+    public function getName(): ?string
     {
         return $this->name;
     }
 
-    public function getAddress()
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function getAddress(): ?string
     {
         return $this->address;
     }
 
-    public function setId($id)
-    {
-        $this->id = $id;
-        return $this;
-    }
-
-    public function setName($name)
-    {
-        $this->name = $name;
-        return $this;
-    }
-
-    public function setAddress($address)
+    public function setAddress(string $address): self
     {
         $this->address = $address;
+
         return $this;
     }
 
     /**
-     * Add price
-     *
-     * @param \App\Entity\Price $price
-     *
-     * @return Place
+     * Add price.
      */
-    public function addPrice(\App\Entity\Price $price)
+    public function addPrice(Price $price): self
     {
         $this->prices[] = $price;
 
@@ -109,33 +95,29 @@ class Place
     }
 
     /**
-     * Remove price
-     *
-     * @param \App\Entity\Price $price
+     * Remove price.
      */
-    public function removePrice(\App\Entity\Price $price)
+    public function removePrice(Price $price): self
     {
         $this->prices->removeElement($price);
+
+        return $this;
     }
 
     /**
-     * Get prices
+     * Get prices.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Price[]
      */
-    public function getPrices()
+    public function getPrices(): Collection
     {
         return $this->prices;
     }
 
     /**
-     * Add theme
-     *
-     * @param \App\Entity\Theme $theme
-     *
-     * @return Place
+     * Add theme.
      */
-    public function addTheme(\App\Entity\Theme $theme)
+    public function addTheme(Theme $theme): self
     {
         $this->themes[] = $theme;
 
@@ -143,21 +125,21 @@ class Place
     }
 
     /**
-     * Remove theme
-     *
-     * @param \App\Entity\Theme $theme
+     * Remove theme.
      */
-    public function removeTheme(\App\Entity\Theme $theme)
+    public function removeTheme(Theme $theme): self
     {
         $this->themes->removeElement($theme);
+
+        return $this;
     }
 
     /**
-     * Get themes
+     * Get themes.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Theme[]
      */
-    public function getThemes()
+    public function getThemes(): Collection
     {
         return $this->themes;
     }

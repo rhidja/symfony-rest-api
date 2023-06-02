@@ -1,127 +1,84 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
+use App\Repository\PreferenceRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-/**
- * @ORM\Entity()
- * @ORM\Table(name="preferences", uniqueConstraints={@ORM\UniqueConstraint(name="preferences_name_user_unique", columns={"name", "user_id"})} )
- */
+#[ORM\Table(name: 'preference')]
+#[ORM\UniqueConstraint(name: 'preferences_name_user_unique', columns: ['name', 'user_id'])]
+#[ORM\Entity(repositoryClass: PreferenceRepository::class)]
 class Preference
 {
-    /**
-     * Identifiant unique d'une préférence
-     *
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue
-     * @Groups({"user", "preference"})
-     */
-    protected $id;
+    #[Groups(['user', 'preference'])]
+    #[ORM\Id]
+    #[ORM\Column]
+    #[ORM\GeneratedValue]
+    protected ?int $id = null;
 
     /**
-     * Nom d'une préférence
-     *
-     * @ORM\Column(type="string")
-     * @Groups({"user", "preference"})
+     * Nom d'une préférence.
      */
-    protected $name;
+    #[Groups(['user', 'preference'])]
+    #[ORM\Column]
+    protected ?string $name = null;
 
     /**
-     * Valeur d'une préférence
-     *
-     * @ORM\Column(type="integer")
-     * @Groups({"user", "preference"})
+     * Valeur d'une préférence.
      */
-    protected $value;
+    #[Groups(['user', 'preference'])]
+    #[ORM\Column]
+    protected ?int $value = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User")
-     * @var User
-     * @Groups({"preference"})
-     */
-    protected $user;
+    #[Groups(['preference'])]
+    #[ORM\ManyToOne]
+    protected ?User $user = null;
 
-    public function match(Theme $theme)
+    public function match(Theme $theme): bool
     {
         return $this->name === $theme->getName();
     }
 
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * Set name
-     *
-     * @param string $name
-     *
-     * @return Preference
-     */
-    public function setName($name)
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
     {
         $this->name = $name;
 
         return $this;
     }
 
-    /**
-     * Get name
-     *
-     * @return string
-     */
-    public function getName()
+    public function getValue(): ?int
     {
-        return $this->name;
+        return $this->value;
     }
 
-    /**
-     * Set value
-     *
-     * @param integer $value
-     *
-     * @return Preference
-     */
-    public function setValue($value)
+    public function setValue(int $value): self
     {
         $this->value = $value;
 
         return $this;
     }
 
-    /**
-     * Get value
-     *
-     * @return integer
-     */
-    public function getValue()
-    {
-        return $this->value;
-    }
-
-    /**
-     * Set user
-     *
-     * @param \App\Entity\User $user
-     *
-     * @return Preference
-     */
-    public function setUser(\App\Entity\User $user = null)
+    public function setUser(User $user = null): self
     {
         $this->user = $user;
 
         return $this;
     }
 
-    /**
-     * Get user
-     *
-     * @return \App\Entity\User
-     */
-    public function getUser()
+    public function getUser(): ?User
     {
         return $this->user;
     }
