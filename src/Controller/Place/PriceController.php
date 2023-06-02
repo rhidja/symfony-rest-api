@@ -21,15 +21,15 @@ class PriceController extends AbstractController
     {
     }
 
-    #[Rest\View(serializerGroups: ["price"])]
-    #[Rest\Get("/places/{id}/prices")]
+    #[Rest\View(serializerGroups: ['price'])]
+    #[Rest\Get('/places/{id}/prices')]
     public function getPricesAction(Place $place)
     {
         return $place->getPrices();
     }
 
-    #[Rest\View(statusCode: Response::HTTP_CREATED, serializerGroups: ["price"])]
-    #[Rest\Post("/places/{id}/prices")]
+    #[Rest\View(statusCode: Response::HTTP_CREATED, serializerGroups: ['price'])]
+    #[Rest\Post('/places/{id}/prices')]
     public function postPricesAction(Request $request, Place $place): Price|View|FormInterface
     {
         $price = new Price();

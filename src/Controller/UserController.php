@@ -17,7 +17,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 class UserController extends AbstractController
 {
@@ -28,25 +27,25 @@ class UserController extends AbstractController
     /**
      * @return User[]
      */
-    #[Rest\View(serializerGroups: ["users"])]
-    #[Rest\Get("/users")]
+    #[Rest\View(serializerGroups: ['users'])]
+    #[Rest\Get('/users')]
     public function getUsersAction(UserRepository $userRepository): array
     {
-        /** @var UserInterface[] $users */
+        /** @var User[] $users */
         $users = $userRepository->findAll();
 
         return $users;
     }
 
-    #[Rest\View(serializerGroups: ["users"])]
-    #[Rest\Get("/users/{user_id}")]
+    #[Rest\View(serializerGroups: ['users'])]
+    #[Rest\Get('/users/{user_id}')]
     public function getUserAction(User $user)
     {
         return $user;
     }
 
-    #[Rest\View(statusCode: Response::HTTP_CREATED, serializerGroups: ["users"])]
-    #[Rest\Post("/users")]
+    #[Rest\View(statusCode: Response::HTTP_CREATED, serializerGroups: ['users'])]
+    #[Rest\Post('/users')]
     public function postUsersAction(Request $request, UserPasswordHasherInterface $userPasswordHasher): FormInterface|User
     {
         $user = new User();
@@ -70,23 +69,23 @@ class UserController extends AbstractController
         }
     }
 
-    #[Rest\View(statusCode: Response::HTTP_NO_CONTENT, serializerGroups: ["users"])]
-    #[Rest\Delete("/users/{id}")]
+    #[Rest\View(statusCode: Response::HTTP_NO_CONTENT, serializerGroups: ['users'])]
+    #[Rest\Delete('/users/{id}')]
     public function removeUserAction(User $user)
     {
         $this->em->remove($user);
         $this->em->flush();
     }
 
-    #[Rest\View(serializerGroups: ["users"])]
-    #[Rest\Put("/users/{id}")]
+    #[Rest\View(serializerGroups: ['users'])]
+    #[Rest\Put('/users/{id}')]
     public function updateUserAction(Request $request, User $user, UserPasswordHasherInterface $passwordHasher)
     {
         return $this->updateUser($request, $user, $passwordHasher, true);
     }
 
-    #[Rest\View(serializerGroups: ["users"])]
-    #[Rest\Patch("/users/{id}")]
+    #[Rest\View(serializerGroups: ['users'])]
+    #[Rest\Patch('/users/{id}')]
     public function patchUserAction(Request $request, User $user, UserPasswordHasherInterface $passwordHasher)
     {
         return $this->updateUser($request, $user, $passwordHasher, false);
@@ -118,8 +117,8 @@ class UserController extends AbstractController
         }
     }
 
-    #[Rest\View(serializerGroups: ["users"])]
-    #[Rest\Get("/users/{id}/suggestions")]
+    #[Rest\View(serializerGroups: ['users'])]
+    #[Rest\Get('/users/{id}/suggestions')]
     public function getUserSuggestionsAction(Request $request, User $user)
     {
         $suggestions = [];

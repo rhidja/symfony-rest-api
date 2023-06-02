@@ -21,15 +21,15 @@ class ThemeController extends AbstractController
     {
     }
 
-    #[Rest\View(serializerGroups: ["theme"])]
-    #[Rest\Get("/places/{id}/themes")]
+    #[Rest\View(serializerGroups: ['theme'])]
+    #[Rest\Get('/places/{id}/themes')]
     public function getThemesAction(Place $place)
     {
         return $place->getThemes();
     }
 
-    #[Rest\View(statusCode: Response::HTTP_CREATED, serializerGroups: ["theme"])]
-    #[Rest\Post("/places/{id}/themes")]
+    #[Rest\View(statusCode: Response::HTTP_CREATED, serializerGroups: ['theme'])]
+    #[Rest\Post('/places/{id}/themes')]
     public function postThemesAction(Request $request, Place $place): Theme|View|FormInterface
     {
         $theme = new Theme();

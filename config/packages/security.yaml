@@ -4,6 +4,8 @@ security:
         ROLE_SUPER_ADMIN: ROLE_ADMIN
 
     providers:
+        auth_token_user_provider:
+            id: App\Security\AuthTokenUserProvider
         app_user_provider:
             entity:
                 class: App\Entity\User
@@ -22,22 +24,22 @@ security:
             pattern: ^/api/doc
             security: false
 
-        api:
-            pattern: ^/api/
-            security: false
-
-        main:
+        token:
             lazy: true
-            pattern: ^/
+            pattern: ^/api/auth-tokens$
             json_login:
+                check_path: api_login
                 provider: app_user_provider
+
+        api:
+            pattern: ^/api
+            custom_authenticator:
+                - App\Security\AuthTokenAuthenticator
 
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        - { path: ^/api/login$, role: PUBLIC_ACCESS }
-        - { path: ^/api/register$, role: PUBLIC_ACCESS }
-        - { path: ^/api/resetting$, role: PUBLIC_ACCESS }
+        #- { path: ^/auth-tokens$, role: PUBLIC_ACCESS }
 
 when@test:
     security:
