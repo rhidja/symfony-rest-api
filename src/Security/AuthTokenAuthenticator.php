@@ -2,6 +2,8 @@
 
 namespace App\Security;
 
+use App\Entity\AuthToken;
+use App\Repository\AuthTokenRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -11,14 +13,16 @@ use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
 use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
+use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\CustomCredentials;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
-use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
 
 class AuthTokenAuthenticator extends AbstractAuthenticator
 {
-    protected const TARGET_URL = '/auth-tokens';
+    public const TOKEN_VALIDITY_DURATION = '300';
 
-    protected const TOKEN_VALIDITY_DURATION = '36000';
+    public function __construct(private AuthTokenRepository $authTokenRepository)
+    {
+    }
 
     public function supports(Request $request): ?bool
     {
@@ -36,7 +40,14 @@ class AuthTokenAuthenticator extends AbstractAuthenticator
             throw new CustomUserMessageAuthenticationException('No API token provided');
         }
 
-        return new SelfValidatingPassport(new UserBadge($apiToken));
+        return new Passport(
+            new UserBadge($apiToken),
+            new CustomCredentials(function ($credentials) {
+                $authToken = $this->authTokenRepository->findOneByValue($credentials);
+
+                return $this->isTokenValid($authToken);
+            }, $apiToken)
+        );
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
@@ -55,5 +66,10 @@ class AuthTokenAuthenticator extends AbstractAuthenticator
         ];
 
         return new JsonResponse($data, Response::HTTP_UNAUTHORIZED);
+    }
+
+    private function isTokenValid(AuthToken $authToken): bool
+    {
+        return (time() - $authToken->getCreatedAt()->getTimestamp()) < self::TOKEN_VALIDITY_DURATION;
     }
 }
