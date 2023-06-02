@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bc7c0c9b7354350f4c0cd1fa660eb475",
+    "content-hash": "9ac66c37efd9ef90d8d734b2269cb305",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -1460,22 +1460,22 @@
         },
         {
             "name": "friendsofphp/proxy-manager-lts",
-            "version": "v1.0.15",
+            "version": "v1.0.16",
             "source": {
                 "type": "git",
                 "url": "https://github.com/FriendsOfPHP/proxy-manager-lts.git",
-                "reference": "3ca65b8edb8d96b46fedc9bb4911396516347129"
+                "reference": "ecadbdc9052e4ad08c60c8a02268712e50427f7c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfPHP/proxy-manager-lts/zipball/3ca65b8edb8d96b46fedc9bb4911396516347129",
-                "reference": "3ca65b8edb8d96b46fedc9bb4911396516347129",
+                "url": "https://api.github.com/repos/FriendsOfPHP/proxy-manager-lts/zipball/ecadbdc9052e4ad08c60c8a02268712e50427f7c",
+                "reference": "ecadbdc9052e4ad08c60c8a02268712e50427f7c",
                 "shasum": ""
             },
             "require": {
                 "laminas/laminas-code": "~3.4.1|^4.0",
                 "php": ">=7.1",
-                "symfony/filesystem": "^4.4.17|^5.0|^6.0"
+                "symfony/filesystem": "^4.4.17|^5.0|^6.0|^7.0"
             },
             "conflict": {
                 "laminas/laminas-stdlib": "<3.2.1",
@@ -1486,7 +1486,7 @@
             },
             "require-dev": {
                 "ext-phar": "*",
-                "symfony/phpunit-bridge": "^5.4|^6.0"
+                "symfony/phpunit-bridge": "^5.4|^6.0|^7.0"
             },
             "type": "library",
             "extra": {
@@ -1526,7 +1526,7 @@
             ],
             "support": {
                 "issues": "https://github.com/FriendsOfPHP/proxy-manager-lts/issues",
-                "source": "https://github.com/FriendsOfPHP/proxy-manager-lts/tree/v1.0.15"
+                "source": "https://github.com/FriendsOfPHP/proxy-manager-lts/tree/v1.0.16"
             },
             "funding": [
                 {
@@ -1538,7 +1538,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-05-16T13:18:04+00:00"
+            "time": "2023-05-24T07:17:17+00:00"
         },
         {
             "name": "friendsofsymfony/rest-bundle",
@@ -1645,97 +1645,6 @@
                 "source": "https://github.com/FriendsOfSymfony/FOSRestBundle/tree/3.3.0"
             },
             "time": "2022-02-03T20:06:00+00:00"
-        },
-        {
-            "name": "friendsofsymfony/user-bundle",
-            "version": "v3.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/FriendsOfSymfony/FOSUserBundle.git",
-                "reference": "89c18b6944adb12541f5b3b1ab39287b5336b375"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfSymfony/FOSUserBundle/zipball/89c18b6944adb12541f5b3b1ab39287b5336b375",
-                "reference": "89c18b6944adb12541f5b3b1ab39287b5336b375",
-                "shasum": ""
-            },
-            "require": {
-                "ext-dom": "*",
-                "ext-json": "*",
-                "php": "^7.4 || ^8.0",
-                "symfony/config": "^4.4 || ^5.0 || ^6.0",
-                "symfony/dependency-injection": "^4.4 || ^5.0 || ^6.0",
-                "symfony/event-dispatcher": "^4.4 || ^5.0 || ^6.0",
-                "symfony/event-dispatcher-contracts": "^1.1 || ^2.0 || ^3.0",
-                "symfony/form": "^4.4 || ^5.0 || ^6.0",
-                "symfony/framework-bundle": "^4.4 || ^5.0 || ^6.0",
-                "symfony/http-foundation": "^4.4 || ^5.0 || ^6.0",
-                "symfony/http-kernel": "^4.4 || ^5.0 || ^6.0",
-                "symfony/options-resolver": "^4.4 || ^5.0 || ^6.0",
-                "symfony/routing": "^4.4 || ^5.0 || ^6.0",
-                "symfony/security-bundle": "^4.4 || ^5.0 || ^6.0",
-                "symfony/security-core": "^4.4 || ^5.0 || ^6.0",
-                "symfony/translation": "^4.4 || ^5.0 || ^6.0",
-                "symfony/twig-bundle": "^4.4 || ^5.0 || ^6.0",
-                "symfony/validator": "^4.4 || ^5.0 || ^6.0",
-                "twig/twig": "^1.34 || ^2.4 || ^3.0"
-            },
-            "conflict": {
-                "doctrine/doctrine-bundle": "<1.3",
-                "doctrine/persistence": "<1.3",
-                "symfony/doctrine-bridge": "<4.4"
-            },
-            "require-dev": {
-                "doctrine/doctrine-bundle": "^1.3 || ^2",
-                "friendsofphp/php-cs-fixer": "^3.0.2, !=3.5.0",
-                "swiftmailer/swiftmailer": "^4.3 || ^5.0 || ^6.0",
-                "symfony/console": "^4.4 || ^5.0 || ^6.0",
-                "symfony/phpunit-bridge": "^6.1",
-                "symfony/yaml": "^4.4 || ^5.0 || ^6.0"
-            },
-            "type": "symfony-bundle",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "3.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "FOS\\UserBundle\\": ""
-                },
-                "exclude-from-classmap": [
-                    "/Tests/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Christophe Coevoet",
-                    "email": "stof@notk.org"
-                },
-                {
-                    "name": "Thibault Duplessis"
-                },
-                {
-                    "name": "FriendsOfSymfony Community",
-                    "homepage": "https://github.com/friendsofsymfony/FOSUserBundle/contributors"
-                }
-            ],
-            "description": "Symfony FOSUserBundle",
-            "homepage": "http://friendsofsymfony.github.com",
-            "keywords": [
-                "User management"
-            ],
-            "support": {
-                "docs": "https://symfony.com/doc/master/bundles/FOSUserBundle/index.html",
-                "issues": "https://github.com/FriendsOfSymfony/FOSUserBundle/issues",
-                "source": "https://github.com/FriendsOfSymfony/FOSUserBundle/tree/v3.1.0"
-            },
-            "time": "2022-10-26T09:10:52+00:00"
         },
         {
             "name": "laminas/laminas-code",
@@ -3751,16 +3660,16 @@
         },
         {
             "name": "symfony/flex",
-            "version": "v1.19.5",
+            "version": "v1.20.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/flex.git",
-                "reference": "51077ed0f6dc2c94cd0b670167eee3747c31b2c1"
+                "reference": "49059a10127ac8270957e116a2251ae535d202ac"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/flex/zipball/51077ed0f6dc2c94cd0b670167eee3747c31b2c1",
-                "reference": "51077ed0f6dc2c94cd0b670167eee3747c31b2c1",
+                "url": "https://api.github.com/repos/symfony/flex/zipball/49059a10127ac8270957e116a2251ae535d202ac",
+                "reference": "49059a10127ac8270957e116a2251ae535d202ac",
                 "shasum": ""
             },
             "require": {
@@ -3796,7 +3705,7 @@
             "description": "Composer plugin for Symfony",
             "support": {
                 "issues": "https://github.com/symfony/flex/issues",
-                "source": "https://github.com/symfony/flex/tree/v1.19.5"
+                "source": "https://github.com/symfony/flex/tree/v1.20.0"
             },
             "funding": [
                 {
@@ -3812,7 +3721,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-01-30T17:02:31+00:00"
+            "time": "2023-05-26T16:25:26+00:00"
         },
         {
             "name": "symfony/form",
@@ -5937,6 +5846,85 @@
                 }
             ],
             "time": "2023-03-14T15:00:05+00:00"
+        },
+        {
+            "name": "symfony/runtime",
+            "version": "v6.2.8",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/runtime.git",
+                "reference": "f8b0751b33888329be8f8f0481bb81d279ec4157"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/runtime/zipball/f8b0751b33888329be8f8f0481bb81d279ec4157",
+                "reference": "f8b0751b33888329be8f8f0481bb81d279ec4157",
+                "shasum": ""
+            },
+            "require": {
+                "composer-plugin-api": "^1.0|^2.0",
+                "php": ">=8.1"
+            },
+            "conflict": {
+                "symfony/dotenv": "<5.4"
+            },
+            "require-dev": {
+                "composer/composer": "^1.0.2|^2.0",
+                "symfony/console": "^5.4|^6.0",
+                "symfony/dotenv": "^5.4|^6.0",
+                "symfony/http-foundation": "^5.4|^6.0",
+                "symfony/http-kernel": "^5.4|^6.0"
+            },
+            "type": "composer-plugin",
+            "extra": {
+                "class": "Symfony\\Component\\Runtime\\Internal\\ComposerPlugin"
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\Runtime\\": "",
+                    "Symfony\\Runtime\\Symfony\\Component\\": "Internal/"
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nicolas Grekas",
+                    "email": "p@tchwork.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Enables decoupling PHP applications from global state",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "runtime"
+            ],
+            "support": {
+                "source": "https://github.com/symfony/runtime/tree/v6.2.8"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2023-03-14T15:48:35+00:00"
         },
         {
             "name": "symfony/security-bundle",

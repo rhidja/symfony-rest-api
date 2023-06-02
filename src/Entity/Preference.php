@@ -6,6 +6,7 @@ namespace App\Entity;
 
 use App\Repository\PreferenceRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Table(name: 'preference')]
@@ -35,7 +36,7 @@ class Preference
 
     #[Groups(['preference'])]
     #[ORM\ManyToOne]
-    protected ?User $user = null;
+    protected ?UserInterface $user = null;
 
     public function match(Theme $theme): bool
     {
@@ -71,14 +72,14 @@ class Preference
         return $this;
     }
 
-    public function setUser(User $user = null): self
+    public function setUser(UserInterface $user = null): self
     {
         $this->user = $user;
 
         return $this;
     }
 
-    public function getUser(): ?User
+    public function getUser(): ?UserInterface
     {
         return $this->user;
     }

@@ -6,6 +6,7 @@ namespace App\Entity;
 
 use App\Repository\AuthTokenRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Table(name: 'auth_token')]
@@ -29,7 +30,7 @@ class AuthToken
 
     #[Groups(['auth-token'])]
     #[ORM\ManyToOne]
-    protected ?User $user = null;
+    protected ?UserInterface $user = null;
 
     public function __construct()
     {
@@ -65,12 +66,12 @@ class AuthToken
         return $this;
     }
 
-    public function getUser(): ?User
+    public function getUser(): ?UserInterface
     {
         return $this->user;
     }
 
-    public function setUser(User $user): self
+    public function setUser(UserInterface $user): self
     {
         $this->user = $user;
 
