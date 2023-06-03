@@ -8,7 +8,7 @@ use App\Repository\PriceRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-#[ORM\Table(name: 'price')]
+#[ORM\Table(name: 'app_price')]
 #[ORM\UniqueConstraint(name: 'prices_type_place_unique', columns: ['type', 'place_id'])]
 #[ORM\Entity(repositoryClass: PriceRepository::class)]
 class Price

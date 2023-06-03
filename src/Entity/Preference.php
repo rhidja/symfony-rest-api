@@ -8,7 +8,7 @@ use App\Repository\PreferenceRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-#[ORM\Table(name: 'preference')]
+#[ORM\Table(name: 'app_preference')]
 #[ORM\UniqueConstraint(name: 'preferences_name_user_unique', columns: ['name', 'user_id'])]
 #[ORM\Entity(repositoryClass: PreferenceRepository::class)]
 class Preference

@@ -4,54 +4,42 @@ declare(strict_types=1);
 
 namespace App\DataFixtures;
 
-use App\Entity\Place;
-use App\Entity\Price;
-use App\Entity\Theme;
+use App\DataFixtures\Factory\PlaceFactory;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\DataFixtures\DependentFixtureInterface;
+use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 
-class PlaceFixtures extends Fixture implements DependentFixtureInterface
+class PlaceFixtures extends Fixture implements OrderedFixtureInterface
 {
+    public function getOrder(): int
+    {
+        return 2;
+    }
+
     public function load(ObjectManager $manager): void
     {
-        /** @var Theme $architecture */
-        $architecture = $this->getReference('architecture');
-        /** @var Theme $history */
-        $history = $this->getReference('history');
-        /** @var Theme $art */
-        $art = $this->getReference('art');
-
-        $place = new Place();
-        $place->setName('Tour Eiffel');
-        $place->setAddress('5 Avenue Anatole France, 75007 Paris');
-        $place->addTheme($architecture);
-        $place->addTheme($history);
-        $manager->persist($place);
-        $this->addReference('tour_eiffel', $place);
-
-        $price = new Price();
-        $price->setType('Less than 12');
-        $price->setValue(5.7);
-        $price->setPlace($place);
-        $manager->persist($price);
-
-        $place = new Place();
-        $place->setName('Mont-Saint-Michel');
-        $place->setAddress('50170 Le Mont-Saint-Michel');
-        $place->addTheme($history);
-        $place->addTheme($art);
-        $manager->persist($place);
-
-        $this->addReference('mont_saint_michel', $place);
-
+        PlaceFactory::createSequence($this->getSequence());
         $manager->flush();
     }
 
-    public function getDependencies()
+    private function getSequence()
     {
         return [
-            ThemeFixtures::class,
+            ['name' => 'Empire State Bilding', 'city' => 'New York', 'country' => 'USA'],
+            ['name' => 'Freedom Tower', 'city' => 'New York', 'country' => 'USA'],
+            ['name' => 'CN Tower', 'city' => 'Toronto', 'country' => 'Canada'],
+            ['name' => 'Arc de Triomphe', 'city' => 'Paris', 'country' => 'France'],
+            ['name' => 'Tour Eiffel', 'city' => 'Paris', 'country' => 'France'],
+            ['name' => 'Le Louvre', 'city' => 'Paris', 'country' => 'France'],
+            ['name' => 'Burj Khalifa', 'city' => 'Dubaï', 'country' => 'Emirats Arabes Unis'],
+            ['name' => 'Disneyland', 'city' => 'Californie', 'country' => 'USA'],
+            ['name' => 'Buckingham Palace', 'city' => 'Londres', 'country' => 'Angleterre'],
+            ['name' => 'Golden Gate Bridge', 'city' => 'San Francisco', 'country' => 'USA'],
+            ['name' => 'Opéra de Sydney', 'city' => 'Sydney', 'country' => 'Australie'],
+            ['name' => 'Le Mur de Berlin', 'city' => 'Berlin', 'country' => 'Allemagne'],
+            ['name' => 'La Mosquée Bleue', 'city' => 'Istanbul', 'country' => 'Turquie'],
+            ['name' => 'Le Vatican', 'city' => 'Le Vatican', 'country' => 'Le Vatican'],
+            ['name' => ' La grande pyramide de Gizeh', 'city' => 'Gizeh', 'country' => 'Egypte']
         ];
     }
 }

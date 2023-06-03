@@ -20,9 +20,6 @@ return static function (RectorConfig $rectorConfig): void {
 
     // define sets of rules
     $rectorConfig->sets([
-        \Rector\Doctrine\Set\DoctrineSetList::ANNOTATIONS_TO_ATTRIBUTES,
-        SymfonySetList::ANNOTATIONS_TO_ATTRIBUTES,
-        //NetteSetLis::ANNOTATIONS_TO_ATTRIBUTES,
-        \Rector\Symfony\Set\SensiolabsSetList::FRAMEWORK_EXTRA_61,
+        \Rector\Set\ValueObject\LevelSetList::UP_TO_PHP_80,
     ]);
 };

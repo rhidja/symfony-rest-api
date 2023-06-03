@@ -10,7 +10,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-#[ORM\Table(name: 'place')]
+#[ORM\Table(name: 'app_place')]
 #[ORM\UniqueConstraint(name: 'places_name_unique', columns: ['name'])]
 #[ORM\Entity(repositoryClass: PlaceRepository::class)]
 class Place
@@ -35,18 +35,21 @@ class Place
     #[ORM\Column]
     protected ?string $address = null;
 
-    /**
-     * La liste des prix d'un lieu.
-     */
+    #[Groups(['place', 'price', 'theme'])]
+    #[ORM\Column]
+    protected ?string $city = null;
+
+    #[Groups(['place', 'price', 'theme'])]
+    #[ORM\Column]
+    protected ?string $country = null;
+
     #[Groups(['place'])]
-    #[ORM\OneToMany(mappedBy: 'place', targetEntity: 'Price', cascade: ['persist'])]
+    #[ORM\OneToMany(mappedBy: 'place', targetEntity: 'Price', cascade: ['all'], orphanRemoval: true)]
     protected Collection $prices;
 
-    /**
-     * La liste des thèmes d'un lieu.
-     */
     #[Groups(['place'])]
-    #[ORM\OneToMany(mappedBy: 'place', targetEntity: 'Theme', cascade: ['persist'])]
+    #[ORM\ManyToMany(targetEntity: 'Theme', cascade: ['all'], orphanRemoval: true)]
+    #[ORM\JoinTable(name: 'app_place_theme')]
     protected Collection $themes;
 
     public function __construct()
@@ -84,29 +87,31 @@ class Place
         return $this;
     }
 
-    /**
-     * Add price.
-     */
-    public function addPrice(Price $price): self
+    public function getCity(): ?string
     {
-        $this->prices[] = $price;
+        return $this->city;
+    }
+
+    public function setCity(string $city): self
+    {
+        $this->city = $city;
+
+        return $this;
+    }
+
+    public function getCountry(): ?string
+    {
+        return $this->country;
+    }
+
+    public function setCountry(string $country): self
+    {
+        $this->country = $country;
 
         return $this;
     }
 
     /**
-     * Remove price.
-     */
-    public function removePrice(Price $price): self
-    {
-        $this->prices->removeElement($price);
-
-        return $this;
-    }
-
-    /**
-     * Get prices.
-     *
      * @return Price[]
      */
     public function getPrices(): Collection
@@ -115,32 +120,75 @@ class Place
     }
 
     /**
-     * Add theme.
+     * @param Price[] $prices
      */
-    public function addTheme(Theme $theme): self
+    public function setPrice(Collection $prices): self
     {
-        $this->themes[] = $theme;
+        foreach ($prices as $price) {
+            if ($price instanceof Price) {
+                $this->addPrice($price);
+            }
+        }
+
+        return $this;
+    }
+
+    public function addPrice(Price $price): self
+    {
+        if (!$this->prices->contains($price)) {
+            $this->prices->add($price);
+            $price->setPlace($this);
+        }
+
+        return $this;
+    }
+
+    public function removePrice(Price $price): self
+    {
+        if ($this->prices->contains($price)) {
+            $this->prices->removeElement($price);
+        }
 
         return $this;
     }
 
     /**
-     * Remove theme.
-     */
-    public function removeTheme(Theme $theme): self
-    {
-        $this->themes->removeElement($theme);
-
-        return $this;
-    }
-
-    /**
-     * Get themes.
-     *
      * @return Theme[]
      */
     public function getThemes(): Collection
     {
         return $this->themes;
+    }
+
+    /**
+     * @param Theme[] $themes
+     */
+    public function setTheme(Collection $themes): self
+    {
+        foreach ($themes as $theme) {
+            if ($theme instanceof Theme) {
+                $this->addTheme($theme);
+            }
+        }
+
+        return $this;
+    }
+
+    public function addTheme(Theme $theme): self
+    {
+        if (!$this->themes->contains($theme)) {
+            $this->themes->add($theme);
+        }
+
+        return $this;
+    }
+
+    public function removeTheme(Theme $theme): self
+    {
+        if ($this->themes->contains($theme)) {
+            $this->themes->removeElement($theme);
+        }
+
+        return $this;
     }
 }

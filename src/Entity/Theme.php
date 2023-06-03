@@ -8,8 +8,7 @@ use App\Repository\ThemeRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-#[ORM\Table(name: 'theme')]
-#[ORM\UniqueConstraint(name: 'themes_name_place_unique', columns: ['name', 'place_id'])]
+#[ORM\Table(name: 'app_theme')]
 #[ORM\Entity(repositoryClass: ThemeRepository::class)]
 class Theme
 {
@@ -32,10 +31,6 @@ class Theme
     #[Groups(['place', 'theme'])]
     #[ORM\Column]
     protected ?int $value = null;
-
-    #[Groups(['theme'])]
-    #[ORM\ManyToOne(inversedBy: 'themes')]
-    protected ?Place $place = null;
 
     public function getId(): ?int
     {
@@ -62,18 +57,6 @@ class Theme
     public function setValue($value): self
     {
         $this->value = $value;
-
-        return $this;
-    }
-
-    public function getPlace(): ?Place
-    {
-        return $this->place;
-    }
-
-    public function setPlace(Place $place): self
-    {
-        $this->place = $place;
 
         return $this;
     }

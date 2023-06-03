@@ -8,7 +8,7 @@ use App\Repository\AuthTokenRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-#[ORM\Table(name: 'auth_token')]
+#[ORM\Table(name: 'app_auth_token')]
 #[ORM\UniqueConstraint(name: 'auth_token_value_unique', columns: ['value'])]
 #[ORM\Entity(repositoryClass: AuthTokenRepository::class)]
 class AuthToken

@@ -47,7 +47,8 @@
         "symfony/phpunit-bridge": "^6.0",
         "symfony/stopwatch": "6.2.*",
         "symfony/web-profiler-bundle": "6.2.*",
-        "symplify/easy-coding-standard": "^11.3"
+        "symplify/easy-coding-standard": "^11.3",
+        "zenstruck/foundry": "^1.33"
     },
     "config": {
         "preferred-install": {
