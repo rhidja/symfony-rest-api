@@ -1,9 +1,23 @@
 nelmio_api_doc:
     documentation:
+        servers:
+            - url: http://127.0.0.1/api/doc
+              description: API over HTTP
+            - url: https://127.0.0.1/api/doc
+              description: API over HTTPS
         info:
             title: My App
             description: This is an awesome app!
             version: 1.0.0
+        components:
+            securitySchemes:
+                api_key:
+                    type: apiKey
+                    name: X-AUTH-TOKEN
+                    in: header
+        security:
+            api_key: [ ]
+
     areas: # to filter documented areas
         path_patterns:
             - ^/api(?!/doc$) # Accepts routes under /api except /api/doc
