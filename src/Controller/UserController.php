@@ -38,8 +38,8 @@ class UserController extends AbstractController
     }
 
     #[Rest\View(serializerGroups: ['users'])]
-    #[Rest\Get('/users/{user_id}')]
-    public function getUserAction(User $user)
+    #[Rest\Get('/users/{id}')]
+    public function getUserAction(User $user): User
     {
         return $user;
     }

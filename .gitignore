@@ -15,7 +15,8 @@
 /vendor/
 /web/bundles/
 /.idea/
-.env
+.env.local
+.env.*.local
 
 ###> phpunit/phpunit ###
 /phpunit.xml
