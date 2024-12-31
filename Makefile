@@ -11,7 +11,7 @@ COMPOSER = composer
 PHP = php
 SYMFONY = symfony
 SYMFONY_CONSOLE = $(SYMFONY) console
-PHP_UNIT = $(PHP) bin/phpunit
+PHP_UNIT = $(SYMFONY_CONSOLE) bin/phpunit
 
 ## ----- Project -----
 init: ## Initialize the project
@@ -72,7 +72,7 @@ cache-clear: # Clear the cache
 	$(SYMFONY_CONSOLE) cache:clear
 
 ## ----- Tests -----
-tests: ## Run the tests
+phpunit: ## Run the tests
 	@$(call GREEN, "Running tests...")
 	$(MAKE) database-init-test
 	$(PHP_UNIT)
@@ -84,7 +84,7 @@ database-init-test: ## Init database for tests
 	$(SYMFONY_CONSOLE) d:m:m --no-interaction --env=test
 	$(SYMFONY_CONSOLE) d:f:l --no-interaction --env=test
 
-## ----- Help ----- 
+## ----- Help -----
 help: ## Display this help
 	@$(call GREEN, "Available commands:")
 	@grep -E '(^[a-zA-Z0-9_-]+:.*?##.*$$)|(^##)' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}{printf "3[32m%-30s3[0m %s\n", $$1, $$2}' | sed -e 's/\[32m##/[33m/'

@@ -4,12 +4,12 @@ namespace App\DataFixtures\Factory;
 
 use App\Entity\Theme;
 use App\Repository\ThemeRepository;
-use Zenstruck\Foundry\ModelFactory;
-use Zenstruck\Foundry\Proxy;
-use Zenstruck\Foundry\RepositoryProxy;
+use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
+use Zenstruck\Foundry\Persistence\Proxy;
+use Zenstruck\Foundry\Persistence\ProxyRepositoryDecorator;
 
 /**
- * @extends ModelFactory<Theme>
+ * @extends ProxyRepositoryDecorator<Theme>
  *
  * @method        Theme|Proxy create(array|callable $attributes = [])
  * @method static Theme|Proxy createOne(array $attributes = [])
@@ -19,7 +19,7 @@ use Zenstruck\Foundry\RepositoryProxy;
  * @method static Theme|Proxy last(string $sortedField = 'id')
  * @method static Theme|Proxy random(array $attributes = [])
  * @method static Theme|Proxy randomOrCreate(array $attributes = [])
- * @method static ThemeRepository|RepositoryProxy repository()
+ * @method static ThemeRepository|ProxyRepositoryDecorator repository()
  * @method static Theme[]|Proxy[] all()
  * @method static Theme[]|Proxy[] createMany(int $number, array|callable $attributes = [])
  * @method static Theme[]|Proxy[] createSequence(iterable|callable $sequence)
@@ -28,16 +28,11 @@ use Zenstruck\Foundry\RepositoryProxy;
  * @method static Theme[]|Proxy[] randomSet(int $number, array $attributes = [])
  *
  */
-final class ThemeFactory extends ModelFactory
+final class ThemeFactory extends PersistentProxyObjectFactory
 {
-    /**
-     * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#factories-as-services
-     *
-     * @todo inject services if required
-     */
-    public function __construct()
+    public static function class(): string
     {
-        parent::__construct();
+        return Theme::class;
     }
 
     /**
@@ -45,7 +40,7 @@ final class ThemeFactory extends ModelFactory
      *
      * @todo add your default values here
      */
-    protected function getDefaults(): array
+    protected function defaults(): array
     {
         return [
             'name' => self::faker()->text(),
@@ -56,15 +51,10 @@ final class ThemeFactory extends ModelFactory
     /**
      * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#initialization
      */
-    protected function initialize(): self
+    protected function initialize(): static
     {
         return $this
             // ->afterInstantiate(function(Theme $theme): void {})
         ;
-    }
-
-    protected static function getClass(): string
-    {
-        return Theme::class;
     }
 }
