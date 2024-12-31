@@ -22,9 +22,12 @@ class PreferenceController extends AbstractController
     {
     }
 
+    /**
+     * @return Preference[]
+     */
     #[Rest\View(serializerGroups: ['preference'])]
     #[Rest\Get('/users/{id}/preferences')]
-    public function getPreferencesAction(PreferenceRepository $preferenceRepository, User $user)
+    public function getPreferencesAction(PreferenceRepository $preferenceRepository, User $user): array
     {
         $preferences = $preferenceRepository->findByUser($user);
 

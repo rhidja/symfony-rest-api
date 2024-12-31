@@ -1,3 +1,8 @@
+homepage:
+    type: attribute
+    resource: App\Controller\ApiController
+    prefix: /
+
 places:
     type: attribute
     resource: App\Controller\PlaceController

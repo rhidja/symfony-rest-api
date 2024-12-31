@@ -1,13 +1,18 @@
 <?php
-
-$finder = PhpCsFixer\Finder::create()
-    ->in(__DIR__ . '/src')
+$finder = (new PhpCsFixer\Finder())
+    ->in(__DIR__)
+    ->exclude([
+        'bin',
+        'var',
+        'vendor'
+    ])
 ;
 
-$config = new PhpCsFixer\Config();
-return $config->setRules([
-    '@Symfony' => true,
-    'yoda_style' => false,
-])
+return (new PhpCsFixer\Config())
+    ->setRules([
+        '@Symfony' => true,
+        'yoda_style' => false,
+        'global_namespace_import' => ['import_classes' => null],
+    ])
     ->setFinder($finder)
 ;

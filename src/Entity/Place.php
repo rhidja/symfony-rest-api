@@ -119,20 +119,6 @@ class Place
         return $this->prices;
     }
 
-    /**
-     * @param Price[] $prices
-     */
-    public function setPrice(Collection $prices): self
-    {
-        foreach ($prices as $price) {
-            if ($price instanceof Price) {
-                $this->addPrice($price);
-            }
-        }
-
-        return $this;
-    }
-
     public function addPrice(Price $price): self
     {
         if (!$this->prices->contains($price)) {
@@ -158,20 +144,6 @@ class Place
     public function getThemes(): Collection
     {
         return $this->themes;
-    }
-
-    /**
-     * @param Theme[] $themes
-     */
-    public function setTheme(Collection $themes): self
-    {
-        foreach ($themes as $theme) {
-            if ($theme instanceof Theme) {
-                $this->addTheme($theme);
-            }
-        }
-
-        return $this;
     }
 
     public function addTheme(Theme $theme): self
