@@ -20,16 +20,19 @@ class PlaceController extends AbstractController
     {
     }
 
+    /**
+     * @return Place[]
+     */
     #[Rest\View(serializerGroups: ['place'])]
     #[Rest\Get('/places')]
-    public function getPlacesAction(PlaceRepository $placeRepository)
+    public function getPlacesAction(PlaceRepository $placeRepository): array
     {
         return $placeRepository->findAll();
     }
 
     #[Rest\View(serializerGroups: ['place'])]
     #[Rest\Get('/places/{id}')]
-    public function getPlaceAction(Place $place)
+    public function getPlaceAction(Place $place): Place
     {
         return $place;
     }
@@ -55,7 +58,7 @@ class PlaceController extends AbstractController
 
     #[Rest\View(statusCode: Response::HTTP_NO_CONTENT, serializerGroups: ['place'])]
     #[Rest\Delete('/places/{id}')]
-    public function removePlaceAction(Place $place)
+    public function removePlaceAction(Place $place): void
     {
         foreach ($place->getPrices() as $price) {
             $this->em->remove($price);
@@ -67,12 +70,12 @@ class PlaceController extends AbstractController
 
      #[Rest\View(serializerGroups: ['place'])]
      #[Rest\Patch('/places/{id}')]
-    public function patchPlaceAction(Request $request, Place $place)
+    public function patchPlaceAction(Request $request, Place $place): Place|FormInterface
     {
         return $this->updatePlace($request, $place, false);
     }
 
-    private function updatePlace(Request $request, Place $place, $clearMissing)
+    private function updatePlace(Request $request, Place $place, $clearMissing): Place|FormInterface
     {
         $form = $this->createForm(PlaceType::class, $place);
 

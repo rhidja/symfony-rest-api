@@ -33,7 +33,7 @@ class ThemeController extends AbstractController
     public function postThemesAction(Request $request, Place $place): Theme|View|FormInterface
     {
         $theme = new Theme();
-        $theme->setPlace($place);
+        $place->addTheme($theme);
         $form = $this->createForm(ThemeType::class, $theme);
 
         $form->submit($request->request->all());
