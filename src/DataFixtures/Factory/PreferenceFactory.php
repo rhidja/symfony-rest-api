@@ -4,12 +4,12 @@ namespace App\DataFixtures\Factory;
 
 use App\Entity\Preference;
 use App\Repository\PreferenceRepository;
-use Zenstruck\Foundry\ModelFactory;
-use Zenstruck\Foundry\Proxy;
-use Zenstruck\Foundry\RepositoryProxy;
+use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
+use Zenstruck\Foundry\Persistence\Proxy;
+use Zenstruck\Foundry\Persistence\ProxyRepositoryDecorator;
 
 /**
- * @extends ModelFactory<Preference>
+ * @extends ProxyRepositoryDecorator<Preference>
  *
  * @method        Preference|Proxy create(array|callable $attributes = [])
  * @method static Preference|Proxy createOne(array $attributes = [])
@@ -19,7 +19,7 @@ use Zenstruck\Foundry\RepositoryProxy;
  * @method static Preference|Proxy last(string $sortedField = 'id')
  * @method static Preference|Proxy random(array $attributes = [])
  * @method static Preference|Proxy randomOrCreate(array $attributes = [])
- * @method static PreferenceRepository|RepositoryProxy repository()
+ * @method static PreferenceRepository|ProxyRepositoryDecorator repository()
  * @method static Preference[]|Proxy[] all()
  * @method static Preference[]|Proxy[] createMany(int $number, array|callable $attributes = [])
  * @method static Preference[]|Proxy[] createSequence(iterable|callable $sequence)
@@ -28,16 +28,11 @@ use Zenstruck\Foundry\RepositoryProxy;
  * @method static Preference[]|Proxy[] randomSet(int $number, array $attributes = [])
  *
  */
-final class PreferenceFactory extends ModelFactory
+final class PreferenceFactory extends PersistentProxyObjectFactory
 {
-    /**
-     * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#factories-as-services
-     *
-     * @todo inject services if required
-     */
-    public function __construct()
+    public static function class(): string
     {
-        parent::__construct();
+        return Preference::class;
     }
 
     /**
@@ -45,7 +40,7 @@ final class PreferenceFactory extends ModelFactory
      *
      * @todo add your default values here
      */
-    protected function getDefaults(): array
+    protected function defaults(): array
     {
         return [
             'name' => self::faker()->text(),
@@ -56,15 +51,10 @@ final class PreferenceFactory extends ModelFactory
     /**
      * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#initialization
      */
-    protected function initialize(): self
+    protected function initialize(): static
     {
         return $this
             // ->afterInstantiate(function(Preference $preference): void {})
         ;
-    }
-
-    protected static function getClass(): string
-    {
-        return Preference::class;
     }
 }

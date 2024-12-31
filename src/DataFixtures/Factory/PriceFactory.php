@@ -4,12 +4,12 @@ namespace App\DataFixtures\Factory;
 
 use App\Entity\Price;
 use App\Repository\PriceRepository;
-use Zenstruck\Foundry\ModelFactory;
-use Zenstruck\Foundry\Proxy;
-use Zenstruck\Foundry\RepositoryProxy;
+use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
+use Zenstruck\Foundry\Persistence\Proxy;
+use Zenstruck\Foundry\Persistence\ProxyRepositoryDecorator;
 
 /**
- * @extends ModelFactory<Price>
+ * @extends ProxyRepositoryDecorator<Price>
  *
  * @method        Price|Proxy create(array|callable $attributes = [])
  * @method static Price|Proxy createOne(array $attributes = [])
@@ -19,7 +19,7 @@ use Zenstruck\Foundry\RepositoryProxy;
  * @method static Price|Proxy last(string $sortedField = 'id')
  * @method static Price|Proxy random(array $attributes = [])
  * @method static Price|Proxy randomOrCreate(array $attributes = [])
- * @method static PriceRepository|RepositoryProxy repository()
+ * @method static PriceRepository|ProxyRepositoryDecorator repository()
  * @method static Price[]|Proxy[] all()
  * @method static Price[]|Proxy[] createMany(int $number, array|callable $attributes = [])
  * @method static Price[]|Proxy[] createSequence(iterable|callable $sequence)
@@ -28,16 +28,11 @@ use Zenstruck\Foundry\RepositoryProxy;
  * @method static Price[]|Proxy[] randomSet(int $number, array $attributes = [])
  *
  */
-final class PriceFactory extends ModelFactory
+final class PriceFactory extends PersistentProxyObjectFactory
 {
-    /**
-     * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#factories-as-services
-     *
-     * @todo inject services if required
-     */
-    public function __construct()
+    public static function class(): string
     {
-        parent::__construct();
+        return Price::class;
     }
 
     /**
@@ -45,7 +40,7 @@ final class PriceFactory extends ModelFactory
      *
      * @todo add your default values here
      */
-    protected function getDefaults(): array
+    protected function defaults(): array
     {
         return [
             'type' => self::faker()->randomElement(['enfant', 'adulte', 'senior']),
@@ -56,15 +51,10 @@ final class PriceFactory extends ModelFactory
     /**
      * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#initialization
      */
-    protected function initialize(): self
+    protected function initialize(): static
     {
         return $this
             // ->afterInstantiate(function(Price $price): void {})
         ;
-    }
-
-    protected static function getClass(): string
-    {
-        return Price::class;
     }
 }

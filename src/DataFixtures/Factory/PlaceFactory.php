@@ -3,14 +3,13 @@
 namespace App\DataFixtures\Factory;
 
 use App\Entity\Place;
-use App\Entity\Price;
 use App\Repository\PlaceRepository;
-use Zenstruck\Foundry\ModelFactory;
-use Zenstruck\Foundry\Proxy;
-use Zenstruck\Foundry\RepositoryProxy;
+use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
+use Zenstruck\Foundry\Persistence\Proxy;
+use Zenstruck\Foundry\Persistence\ProxyRepositoryDecorator;
 
 /**
- * @extends ModelFactory<Place>
+ * @extends PersistentProxyObjectFactory<Place>
  *
  * @method        Place|Proxy create(array|callable $attributes = [])
  * @method static Place|Proxy createOne(array $attributes = [])
@@ -20,7 +19,7 @@ use Zenstruck\Foundry\RepositoryProxy;
  * @method static Place|Proxy last(string $sortedField = 'id')
  * @method static Place|Proxy random(array $attributes = [])
  * @method static Place|Proxy randomOrCreate(array $attributes = [])
- * @method static PlaceRepository|RepositoryProxy repository()
+ * @method static PlaceRepository|ProxyRepositoryDecorator repository()
  * @method static Place[]|Proxy[] all()
  * @method static Place[]|Proxy[] createMany(int $number, array|callable $attributes = [])
  * @method static Place[]|Proxy[] createSequence(iterable|callable $sequence)
@@ -29,16 +28,11 @@ use Zenstruck\Foundry\RepositoryProxy;
  * @method static Place[]|Proxy[] randomSet(int $number, array $attributes = [])
  *
  */
-final class PlaceFactory extends ModelFactory
+final class PlaceFactory extends PersistentProxyObjectFactory
 {
-    /**
-     * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#factories-as-services
-     *
-     * @todo inject services if required
-     */
-    public function __construct()
+    public static function class(): string
     {
-        parent::__construct();
+        return Place::class;
     }
 
     /**
@@ -46,7 +40,7 @@ final class PlaceFactory extends ModelFactory
      *
      * @todo add your default values here
      */
-    protected function getDefaults(): array
+    protected function defaults(): array|callable
     {
         return [
             'address' => self::faker()->address(),
@@ -63,15 +57,10 @@ final class PlaceFactory extends ModelFactory
     /**
      * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#initialization
      */
-    protected function initialize(): self
+    public function initialize(): static
     {
         return $this
             // ->afterInstantiate(function(Place $place): void {})
         ;
-    }
-
-    protected static function getClass(): string
-    {
-        return Place::class;
     }
 }
