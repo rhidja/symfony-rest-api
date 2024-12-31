@@ -1,38 +1,43 @@
-# Symfony rest api application
+# Symfony REST API
 
-- This API is developed using the framework [Symfony](https://symfony.com/) version 6.2
-- This API is secured using `X-Auth-Token`
-- Fos Rest Bundle
-  [FOSRestBundle](https://github.com/FriendsOfSymfony/FOSRestBundle)
+This is a REST API built using [Symfony](https://symfony.com/) famework, providing various endpoints to interact
+with a system (e.g., users, fames places, etc.). This API is secured using `X-Auth-Token`
 
-- `Makefile` is included for easy testing. To see different commands, run
+I developed this API by following the
+[Create a REST API with Symfony 3](https://zestedesavoir.com/tutoriels/1280/creez-une-api-rest-avec-symfony-3/) 
+tutorial by Zest du Savoir, to learn the essential principles of REST. Then, I upgraded it to Symfony
+4 and later to Symfony 6 by following the
+[Upgrading to Symfony 6.0](https://symfonycasts.com/screencast/symfony6-upgrade/upgrade-symfony6)
+tutorial by Symfony Cast.
 
-```shell
-make help
-```
+## Table of Contents
 
-- A `Postman` collection is included to test different endpoints of the api.
+This guide will walk you through setting up the project, running the server, and testing the API.
 
-```
-./docs/postman_collection.json // Contain a collection of endpoints.
-./docs/postman_environnement.json // The environment variables.
-```
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Running the Application](#running-the-application)
+- [API Documentation](#api-documentation)
+- [Testing the API](#testing-the-api)
 
-## Test this API
+## Prerequisites
 
-1. Clone the project using the following command :
+Before you begin, ensure you have the following installed:
 
-```shell
-git clone https://github.com/rhidja/symfony-rest-api.git
-```
+- PHP (8.1 or higher)
+- Composer
+- Symfony CLI (optional but recommended)
+- Database (MySQL, etc., depending on your setup)
 
-2. Go to the project directory 
+## Installation
 
-```shell
-cd symfony-rest-api/
-```
+1. Clone the repository:
 
-3. Then run the following `make` command to start the application
+   ```bash
+   git clone https://github.com/rhidja/symfony-rest-api.git
+   cd symfony-rest-api
+
+3. Then run the following `make` command to install the application
 
 ```shell
 make init
@@ -44,11 +49,20 @@ This command will:
 - Drop the old database if it exists.
 - Create a new database.
 - Run migrations.
-- Import fixtures
+- Run fixtures
 - And start the Symfony local server. [https://127.0.0.1:8000](https://127.0.0.1:8000/)
 
-4. To see different endpoints of the api [https://127.0.0.1:8000/api/doc](https://127.0.0.1:8000/api/doc/)
+## Running the Application
 
-5. Import the `Postman` the two json files above, included in the project, collection above to test the api Utiliser Postman pour explorer l'API.
+- A `Postman` collection is included to test different endpoints of the api.
 
-8. Une collection Postman est incluse dans ce projet. Importer les dans Postman
+```
+./docs/postman_collection.json // Contain a collection of endpoints.
+./docs/postman_environnement.json // The environment variables.
+```
+
+## API Documentation
+
+To see different endpoints of the api [https://127.0.0.1:8000/api/doc](https://127.0.0.1:8000/api/doc/)
+
+## Testing the API
