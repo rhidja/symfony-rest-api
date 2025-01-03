@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\DataFixtures;
 
 use App\DataFixtures\Factory\UserFactory;
+use App\Entity\SonataUserUser;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
@@ -39,5 +40,17 @@ class UserFixtures extends Fixture implements OrderedFixtureInterface
         $manager->flush();
 
         UserFactory::createMany(10);
+
+        $sonataUser = new SonataUserUser();
+        $sonataUser->setEmail('admin@hidja.fr');
+        $sonataUser->setUsername('admin');
+        $sonataUser->setPlainPassword('admin');
+
+        $sonataUser->setRoles(['ROLE_SUPER_ADMIN']);
+
+        $sonataUser->setEnabled(true);
+        $manager->persist($sonataUser);
+
+        $manager->flush();
     }
 }

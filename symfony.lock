@@ -296,6 +296,9 @@
             "ref": "4ea4a4b6730f83239608d7d4c849533645c70169"
         }
     },
+    "sonata-project/doctrine-orm-admin-bundle": {
+        "version": "4.17.1"
+    },
     "sonata-project/exporter": {
         "version": "3.3",
         "recipe": {
@@ -325,6 +328,9 @@
             "version": "1.2",
             "ref": "30dba2f9b719f21b497a6302f41aac07f9079e13"
         }
+    },
+    "sonata-project/user-bundle": {
+        "version": "5.14.0"
     },
     "symfony/asset": {
         "version": "v4.3.6"
