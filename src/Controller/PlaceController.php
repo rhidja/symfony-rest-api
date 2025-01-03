@@ -51,9 +51,9 @@ class PlaceController extends AbstractController
             $this->em->flush();
 
             return $place;
-        } else {
-            return $form;
         }
+
+        return $form;
     }
 
     #[Rest\View(statusCode: Response::HTTP_NO_CONTENT, serializerGroups: ['place'])]
@@ -86,8 +86,8 @@ class PlaceController extends AbstractController
             $this->em->flush();
 
             return $place;
-        } else {
-            return $form;
         }
+
+        return $form;
     }
 }

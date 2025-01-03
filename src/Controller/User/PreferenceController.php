@@ -49,8 +49,8 @@ class PreferenceController extends AbstractController
             $this->em->flush();
 
             return $preference;
-        } else {
-            return $form;
         }
+
+        return $form;
     }
 }

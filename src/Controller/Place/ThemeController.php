@@ -43,8 +43,8 @@ class ThemeController extends AbstractController
             $this->em->flush();
 
             return $theme;
-        } else {
-            return $form;
         }
+
+        return $form;
     }
 }
