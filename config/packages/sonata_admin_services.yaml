@@ -9,3 +9,9 @@ services:
         public: true
         tags:
             - { name: 'sonata.admin', model_class: 'App\Entity\Place', manager_type: orm, label: "Places" }
+
+    app.admin.theme:
+        class: App\Admin\ThemeAdmin
+        public: true
+        tags:
+            - { name: 'sonata.admin', model_class: 'App\Entity\Theme', manager_type: orm, label: "Themes" }

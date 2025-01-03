@@ -9,6 +9,11 @@ sonata_admin:
                 icon: 'fas fa-users'
                 items:
                     - 'app.admin.place'
+            theme:
+                label: Themes
+                icon: 'fas fa-users'
+                items:
+                    - 'app.admin.theme'
             user:
                 label: Users
                 icon: 'fas fa-users'
