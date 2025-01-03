@@ -12,6 +12,7 @@
         "friendsofsymfony/rest-bundle": "^3.8",
         "nelmio/api-doc-bundle": "^4.11",
         "phpdocumentor/reflection-docblock": "^5.3",
+        "sonata-project/admin-bundle": "^4.34",
         "symfony/asset": "6.4.*",
         "symfony/console": "6.4.*",
         "symfony/dotenv": "6.4.*",
