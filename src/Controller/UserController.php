@@ -31,10 +31,7 @@ class UserController extends AbstractController
     #[Rest\Get('/users')]
     public function getUsersAction(UserRepository $userRepository): array
     {
-        /** @var User[] $users */
-        $users = $userRepository->findAll();
-
-        return $users;
+        return $userRepository->findAll();
     }
 
     #[Rest\View(serializerGroups: ['users'])]
@@ -64,9 +61,9 @@ class UserController extends AbstractController
             $this->em->flush();
 
             return $user;
-        } else {
-            return $form;
         }
+
+        return $form;
     }
 
     #[Rest\View(statusCode: Response::HTTP_NO_CONTENT, serializerGroups: ['users'])]
@@ -112,9 +109,9 @@ class UserController extends AbstractController
             $this->em->flush();
 
             return $user;
-        } else {
-            return $form;
         }
+
+        return $form;
     }
 
     #[Rest\View(serializerGroups: ['users'])]

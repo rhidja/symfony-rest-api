@@ -44,11 +44,11 @@ class Place
     protected ?string $country = null;
 
     #[Groups(['place'])]
-    #[ORM\OneToMany(mappedBy: 'place', targetEntity: 'Price', cascade: ['all'], orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'place', targetEntity: Price::class, cascade: ['all'], orphanRemoval: true)]
     protected Collection $prices;
 
     #[Groups(['place'])]
-    #[ORM\ManyToMany(targetEntity: 'Theme', cascade: ['all'], orphanRemoval: true)]
+    #[ORM\ManyToMany(targetEntity: Theme::class, cascade: ['all'], orphanRemoval: true)]
     #[ORM\JoinTable(name: 'app_place_theme')]
     protected Collection $themes;
 
@@ -112,7 +112,7 @@ class Place
     }
 
     /**
-     * @return Price[]
+     * @return Price[]|Collection
      */
     public function getPrices(): Collection
     {
@@ -123,7 +123,6 @@ class Place
     {
         if (!$this->prices->contains($price)) {
             $this->prices->add($price);
-            $price->setPlace($this);
         }
 
         return $this;

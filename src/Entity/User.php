@@ -14,6 +14,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
+    const MATCH_VALUE_THRESHOLD = 3;
+
     #[Groups(['users', 'auth-token'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]

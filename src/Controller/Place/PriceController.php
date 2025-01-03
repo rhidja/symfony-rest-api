@@ -43,8 +43,8 @@ class PriceController extends AbstractController
             $this->em->flush();
 
             return $price;
-        } else {
-            return $form;
         }
+
+        return $form;
     }
 }
