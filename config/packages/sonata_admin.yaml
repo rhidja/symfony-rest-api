@@ -3,6 +3,17 @@ sonata_admin:
     dashboard:
         blocks:
             - { type: sonata.admin.block.admin_list, position: left }
+        groups:
+            place:
+                label: Places
+                icon: 'fas fa-users'
+                items:
+                    - 'app.admin.place'
+            user:
+                label: Users
+                icon: 'fas fa-users'
+                items:
+                    - 'sonata.user.admin.user'
 
 sonata_block:
     blocks:
