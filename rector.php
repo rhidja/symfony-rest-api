@@ -20,6 +20,6 @@ return static function (RectorConfig $rectorConfig): void {
 
     // define sets of rules
     $rectorConfig->sets([
-        \Rector\Set\ValueObject\LevelSetList::UP_TO_PHP_80,
+        \Rector\Set\ValueObject\LevelSetList::UP_TO_PHP_82,
     ]);
 };

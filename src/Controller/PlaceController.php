@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class PlaceController extends AbstractController
 {
-    public function __construct(private EntityManagerInterface $em)
+    public function __construct(private readonly EntityManagerInterface $em)
     {
     }
 

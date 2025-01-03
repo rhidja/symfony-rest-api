@@ -16,7 +16,7 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class AuthTokenUserProvider implements UserProviderInterface, PasswordUpgraderInterface
 {
-    public function __construct(private AuthTokenRepository $authTokenRepository)
+    public function __construct(private readonly AuthTokenRepository $authTokenRepository)
     {
     }
 
@@ -35,7 +35,7 @@ class AuthTokenUserProvider implements UserProviderInterface, PasswordUpgraderIn
     public function refreshUser(UserInterface $user): UserInterface
     {
         if (!$user instanceof User) {
-            throw new UnsupportedUserException(sprintf('Invalid user class "%s".', get_class($user)));
+            throw new UnsupportedUserException(sprintf('Invalid user class "%s".', $user::class));
         }
 
         return $user;

@@ -18,9 +18,9 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 
 class AuthTokenAuthenticator extends AbstractAuthenticator
 {
-    public const TOKEN_VALIDITY_DURATION = '300';
+    final public const TOKEN_VALIDITY_DURATION = '300';
 
-    public function __construct(private AuthTokenRepository $authTokenRepository)
+    public function __construct(private readonly AuthTokenRepository $authTokenRepository)
     {
     }
 

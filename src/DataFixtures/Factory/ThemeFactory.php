@@ -44,7 +44,7 @@ final class ThemeFactory extends PersistentProxyObjectFactory
     {
         return [
             'name' => self::faker()->text(),
-            'value' => rand(0, 10),
+            'value' => random_int(0, 10),
         ];
     }
 
