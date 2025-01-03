@@ -3,6 +3,7 @@
 namespace App\DataFixtures\Factory;
 
 use App\Entity\Place;
+use App\Entity\Price;
 use App\Repository\PlaceRepository;
 use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
 use Zenstruck\Foundry\Persistence\Proxy;
@@ -47,9 +48,9 @@ final class PlaceFactory extends PersistentProxyObjectFactory
             'name' => self::faker()->domainName(),
             'themes' => ThemeFactory::randomRange(1,2),
             'prices' => [
-                PriceFactory::new(['type' => 'enfant'])->withoutPersisting(),
-                PriceFactory::new(['type' => 'adulte'])->withoutPersisting(),
-                PriceFactory::new(['type' => 'senior'])->withoutPersisting(),
+                PriceFactory::new(['type' => Price::PRICE_TYPE_CHILD, 'value' => self::faker()->randomFloat(2, 1, 10)]),
+                PriceFactory::new(['type' => Price::PRICE_TYPE_SENIOR, 'value' => self::faker()->randomFloat(2, 10, 15)]),
+                PriceFactory::new(['type' => Price::PRICE_TYPE_ADULT, 'value' => self::faker()->randomFloat(2, 15, 30)]),
             ]
         ];
     }

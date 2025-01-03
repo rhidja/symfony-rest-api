@@ -13,6 +13,16 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass: PriceRepository::class)]
 class Price
 {
+    public const PRICE_TYPE_CHILD = 'child';
+    public const PRICE_TYPE_ADULT = 'adult';
+    public const PRICE_TYPE_SENIOR = 'senior';
+
+    public const PRICES_TYPES = [
+        self::PRICE_TYPE_CHILD,
+        self::PRICE_TYPE_ADULT,
+        self::PRICE_TYPE_SENIOR,
+    ];
+
     #[Groups(['place', 'price'])]
     #[ORM\Id]
     #[ORM\Column]

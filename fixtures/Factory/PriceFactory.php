@@ -43,7 +43,7 @@ final class PriceFactory extends PersistentProxyObjectFactory
     protected function defaults(): array
     {
         return [
-            'type' => self::faker()->randomElement(['enfant', 'adulte', 'senior']),
+            'type' => self::faker()->randomElement(Price::PRICES_TYPES),
             'value' => self::faker()->randomFloat(2),
         ];
     }
