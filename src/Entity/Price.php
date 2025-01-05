@@ -47,6 +47,11 @@ class Price
     #[ORM\ManyToOne(inversedBy: 'prices')]
     protected ?Place $place = null;
 
+    public function __toString(): string
+    {
+        return sprintf('%s : %s €', $this->type, $this->value);
+    }
+
     public function getId(): ?int
     {
         return $this->id;

@@ -3,3 +3,11 @@ admin.label.address: Address
 admin.label.city: City
 admin.label.country: Country
 admin.label.value: Value
+admin.label.themes: Themes
+admin.label.prices: Prices
+admin.label.place: Place
+admin.label.type: Type
+admin.label.firstname: Firstname
+admin.label.lastname: Lastname
+admin.label.email: Email
+admin.label.mobile: Mobile

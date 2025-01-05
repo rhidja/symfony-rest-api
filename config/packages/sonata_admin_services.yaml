@@ -15,3 +15,15 @@ services:
         public: true
         tags:
             - { name: 'sonata.admin', model_class: 'App\Entity\Theme', manager_type: orm, label: "Themes" }
+
+    app.admin.price:
+        class: App\Admin\PriceAdmin
+        public: true
+        tags:
+            - { name: 'sonata.admin', model_class: 'App\Entity\Price', manager_type: orm, label: "Prices" }
+
+    app.admin.user:
+        class: App\Admin\UserAdmin
+        public: true
+        tags:
+            - { name: 'sonata.admin', model_class: 'App\Entity\User', manager_type: orm, label: "Users" }

@@ -58,7 +58,8 @@ final class PlaceAdmin extends AbstractAdmin
                     'edit' => [],
                     'delete' => [],
                 ],
-            ]);
+            ])
+        ;
     }
 
     protected function configureDatagridFilters(DatagridMapper $filter): void
@@ -86,6 +87,12 @@ final class PlaceAdmin extends AbstractAdmin
                     ])
                     ->add('country', null, [
                         'label' => 'admin.label.country',
+                    ])
+                    ->add('themes', null, [
+                        'label' => 'admin.label.themes',
+                    ])
+                    ->add('prices', null, [
+                        'label' => 'admin.label.prices',
                     ])
                 ->end()
             ->end()

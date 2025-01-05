@@ -32,6 +32,11 @@ class Theme
     #[ORM\Column]
     protected ?int $value = null;
 
+    public function __toString(): string
+    {
+        return $this->name ?? '';
+    }
+
     public function getId(): ?int
     {
         return $this->id;

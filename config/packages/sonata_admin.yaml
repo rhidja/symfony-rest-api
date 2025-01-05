@@ -6,7 +6,7 @@ sonata_admin:
         groups:
             place:
                 label: Places
-                icon: 'fas fa-users'
+                icon: 'fas fa-map'
                 items:
                     - 'app.admin.place'
             theme:
@@ -14,9 +14,19 @@ sonata_admin:
                 icon: 'fas fa-users'
                 items:
                     - 'app.admin.theme'
+            price:
+                label: Prices
+                icon: 'fas fa-wallet'
+                items:
+                    - 'app.admin.price'
             user:
                 label: Users
                 icon: 'fas fa-users'
+                items:
+                    - 'app.admin.user'
+            configuration:
+                label: Configuration
+                icon: 'fas fa-list'
                 items:
                     - 'sonata.user.admin.user'
 
